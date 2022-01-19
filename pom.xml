@@ -109,7 +109,7 @@
     <distributionManagement>
         <repository>
             <id>plusmc-repo</id>
-            <url>http://join.plusmc.org:8081/snapshots</url>
+            <url>https://maven.plusmc.org/snapshots</url>
         </repository>
     </distributionManagement>
 </project>
