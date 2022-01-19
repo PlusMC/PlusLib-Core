@@ -105,11 +105,11 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-         
+
     <distributionManagement>
-         <repository>
-             <id>plusmc-repo-snapshots</id>
-             <url>http://join.plusmc.org:8081/snapshots</url>
-         </repository>
+        <repository>
+            <id>plusmc-repo</id>
+            <url>http://join.plusmc.org:8081/snapshots</url>
+        </repository>
     </distributionManagement>
 </project>
