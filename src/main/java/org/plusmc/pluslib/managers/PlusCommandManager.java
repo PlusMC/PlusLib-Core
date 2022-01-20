@@ -1,4 +1,4 @@
-package org.plusmc.pluslib;
+package org.plusmc.pluslib.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
@@ -6,7 +6,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 import org.jetbrains.annotations.NotNull;
-import org.plusmc.pluslib.commands.PlusCommand;
+import org.plusmc.pluslib.plus.PlusCommand;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

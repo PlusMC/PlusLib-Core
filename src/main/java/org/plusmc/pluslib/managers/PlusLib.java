@@ -1,4 +1,4 @@
-package org.plusmc.pluslib;
+package org.plusmc.pluslib.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

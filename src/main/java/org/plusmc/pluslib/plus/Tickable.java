@@ -1,6 +1,6 @@
-package org.plusmc.pluslib.tickable;
+package org.plusmc.pluslib.plus;
 
-import org.plusmc.pluslib.TickingManager;
+import org.plusmc.pluslib.managers.TickingManager;
 
 /**
  * A class has a tick method that is called every tick.

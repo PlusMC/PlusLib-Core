@@ -1,4 +1,4 @@
-package org.plusmc.pluslib;
+package org.plusmc.pluslib.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
-import org.plusmc.pluslib.item.PlusItem;
+import org.plusmc.pluslib.plus.PlusItem;
 
 import java.util.ArrayList;
 import java.util.List;

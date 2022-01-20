@@ -1,8 +1,8 @@
-package org.plusmc.pluslib;
+package org.plusmc.pluslib.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
-import org.plusmc.pluslib.tickable.Tickable;
+import org.plusmc.pluslib.plus.Tickable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,7 @@ public class TickingManager {
             if (tickable.isRunning() && !tickable.isAsync())
                 tickable.tick(TICK);
         }
+
         TICK++;
     }
 

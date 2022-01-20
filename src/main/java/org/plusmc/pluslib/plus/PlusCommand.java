@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.commands;
+package org.plusmc.pluslib.plus;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.plusmc.pluslib.PlusCommandManager;
+import org.plusmc.pluslib.managers.PlusCommandManager;
 
 import java.util.ArrayList;
 import java.util.List;

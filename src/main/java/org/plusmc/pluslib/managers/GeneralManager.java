@@ -1,8 +1,8 @@
-package org.plusmc.pluslib;
+package org.plusmc.pluslib.managers;
 
-import org.plusmc.pluslib.commands.PlusCommand;
-import org.plusmc.pluslib.item.PlusItem;
-import org.plusmc.pluslib.tickable.Tickable;
+import org.plusmc.pluslib.plus.PlusCommand;
+import org.plusmc.pluslib.plus.PlusItem;
+import org.plusmc.pluslib.plus.Tickable;
 
 /**
  * Registers all the commands, items, and tickables to their respectable managers.
