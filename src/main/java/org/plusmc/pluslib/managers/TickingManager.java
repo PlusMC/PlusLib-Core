@@ -18,10 +18,21 @@ public class TickingManager {
     private static BukkitTask ASYNC_TASK;
     private static long ASYNC_TICK;
 
+    private static int ERRORS;
+
     private static void tick() {
         for (Tickable tickable : TICKABLES) {
-            if (tickable.isRunning() && !tickable.isAsync())
+            if (!(tickable.isRunning() && !tickable.isAsync())) continue;
+            try {
                 tickable.tick(TICK);
+            } catch (Exception e) {
+                ERRORS++;
+                if (ERRORS > 5) {
+                    PlusLib.logger().severe("Too many errors in tickables. Stop printing them.");
+                } else {
+                    PlusLib.logger().warning("Error while ticking " + tickable.getClass().getSimpleName() + ": " + e.getMessage());
+                }
+            }
         }
 
         TICK++;
@@ -29,8 +40,17 @@ public class TickingManager {
 
     private static void asyncTick() {
         for (Tickable tickable : TICKABLES) {
-            if (tickable.isRunning() && tickable.isAsync())
+            if (!(tickable.isRunning() && tickable.isAsync())) continue;
+            try {
                 tickable.tick(ASYNC_TICK);
+            } catch (Exception e) {
+                ERRORS++;
+                if (ERRORS > 5) {
+                    PlusLib.logger().severe("Too many errors in async tickables. Stop printing them.");
+                } else {
+                    PlusLib.logger().warning("Error while ticking " + tickable.getClass().getSimpleName() + ": " + e.getMessage());
+                }
+            }
         }
         ASYNC_TICK++;
     }
@@ -58,6 +78,7 @@ public class TickingManager {
     static void start() {
         TICK = 0;
         ASYNC_TICK = 0;
+        ERRORS = 0;
         TICKABLES = new ArrayList<>();
         TASK = Bukkit.getScheduler().runTaskTimer(PlusLib.getInstance(), TickingManager::tick, 0L, 1L);
         ASYNC_TASK = Bukkit.getScheduler().runTaskTimerAsynchronously(PlusLib.getInstance(), TickingManager::asyncTick, 0L, 1L);

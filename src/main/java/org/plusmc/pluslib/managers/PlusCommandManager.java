@@ -37,7 +37,7 @@ public class PlusCommandManager {
         COMMAND_MAP.register(cmd.getPlugin().getName(), command);
         COMMANDS.add(cmd);
         cmd.load();
-        PlusLib.logger().info("Loaded command: " + cmd.getName());
+        PlusLib.logger().info("Registered command: " + cmd.getName());
     }
 
     /**
@@ -56,12 +56,12 @@ public class PlusCommandManager {
         CommandMap COMMAND_MAP = getCommandMap();
         PluginCommand command = cmd.getPlugin().getCommand(cmd.getName());
         if (command == null) {
-            PlusLib.logger().warning("Failed to unload command: " + cmd.getName());
+            PlusLib.logger().warning("Failed to unregister command: " + cmd.getName());
             return;
         }
         command.unregister(COMMAND_MAP);
         cmd.unload();
-        PlusLib.logger().info("Unloaded command: " + cmd.getName());
+        PlusLib.logger().info("Unregistered command: " + cmd.getName());
     }
 
     private static PluginCommand createCommand(String name, Plugin plugin) {

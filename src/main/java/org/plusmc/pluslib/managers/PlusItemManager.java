@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import org.plusmc.pluslib.plus.PlusItem;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -101,6 +102,7 @@ public class PlusItemManager {
     public static void register(PlusItem item) {
         PLUS_ITEMS.add(item);
         item.load();
+        PlusLib.logger().info("Registered PlusItem: " + item.getID());
     }
 
     /**
@@ -112,13 +114,18 @@ public class PlusItemManager {
     public static void unregister(PlusItem item) {
         PLUS_ITEMS.remove(item);
         item.unload();
+        PlusLib.logger().info("Unregistered PlusItem: " + item.getID());
     }
 
     /**
      * Unregisters all PlusItems.
      */
     protected static void unregisterAll() {
-        PLUS_ITEMS.forEach(PlusItemManager::unregister);
+        for (Iterator<PlusItem> iterator = PLUS_ITEMS.iterator(); iterator.hasNext(); ) {
+            PlusItem item = iterator.next();
+            iterator.remove();
+            unregister(item);
+        }
         PLUS_ITEMS.clear();
     }
 
