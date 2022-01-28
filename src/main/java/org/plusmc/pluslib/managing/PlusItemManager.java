@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.managers;
+package org.plusmc.pluslib.managing;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -13,8 +13,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
-import org.plusmc.pluslib.plus.PlusItem;
+import org.plusmc.pluslib.PlusLib;
+import org.plusmc.pluslib.managed.Loadable;
+import org.plusmc.pluslib.managed.PlusItem;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,19 +28,18 @@ import java.util.Objects;
  * Registers and manages all PlusItems.
  */
 @SuppressWarnings("unused")
-public class PlusItemManager {
+public class PlusItemManager extends GeneralManager {
     /**
      * The NamespacedKey of the PlusItem.
      */
     public static NamespacedKey PLUS_ITEM_KEY = new NamespacedKey(PlusLib.getInstance(), "custom_item");
     private static List<PlusItem> PLUS_ITEMS;
 
-    /**
-     * Initializes the PlusItemManager.
-     */
-    protected static void load() {
-        Bukkit.getPluginManager().registerEvents(new Listener(), PlusLib.getInstance());
-        PLUS_ITEMS = new ArrayList<>();
+    private final Plugin plugin;
+
+    protected PlusItemManager(Plugin plugin) {
+        super(plugin);
+        this.plugin = plugin;
     }
 
     /**
@@ -94,15 +96,17 @@ public class PlusItemManager {
         return null;
     }
 
+
     /**
      * Registers a {@link PlusItem}.
      *
      * @param item The item to register.
      */
-    public static void register(PlusItem item) {
-        PLUS_ITEMS.add(item);
-        item.load();
-        PlusLib.logger().info("Registered PlusItem: " + item.getID());
+    public void register(Loadable item) {
+        if (!(item instanceof PlusItem pItem)) return;
+        PLUS_ITEMS.add(pItem);
+        pItem.load();
+        PlusLib.logger().info("Registered PlusItem: " + pItem.getID());
     }
 
     /**
@@ -111,22 +115,38 @@ public class PlusItemManager {
      *
      * @param item The item to unregister.
      */
-    public static void unregister(PlusItem item) {
-        PLUS_ITEMS.remove(item);
+    @Override
+    public void unregister(Loadable item) {
+        if (!(item instanceof PlusItem pItem)) return;
+        PLUS_ITEMS.remove(pItem);
         item.unload();
-        PlusLib.logger().info("Unregistered PlusItem: " + item.getID());
+        PlusLib.logger().info("Unregistered PlusItem: " + pItem.getID());
     }
 
-    /**
-     * Unregisters all PlusItems.
-     */
-    protected static void unregisterAll() {
+    @Override
+    Plugin getPlugin() {
+        return plugin;
+    }
+
+    @Override
+    protected void init() {
+        Bukkit.getPluginManager().registerEvents(new Listener(), this.getPlugin());
+        PLUS_ITEMS = new ArrayList<>();
+    }
+
+    @Override
+    protected void shutdown() {
         for (Iterator<PlusItem> iterator = PLUS_ITEMS.iterator(); iterator.hasNext(); ) {
             PlusItem item = iterator.next();
             iterator.remove();
             unregister(item);
         }
         PLUS_ITEMS.clear();
+    }
+
+    @Override
+    public Class<? extends Loadable> getLoadableClass() {
+        return PlusItem.class;
     }
 
     private static class Listener implements org.bukkit.event.Listener {

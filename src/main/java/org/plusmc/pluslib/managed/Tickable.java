@@ -1,24 +1,13 @@
-package org.plusmc.pluslib.plus;
+package org.plusmc.pluslib.managed;
 
-import org.plusmc.pluslib.managers.TickingManager;
+import org.plusmc.pluslib.managing.TickingManager;
 
 /**
  * A class has a tick method that is called every tick.
  * Useful for anything that requires stuff to run on every tick.
  */
 @SuppressWarnings("unused")
-public interface Tickable {
-    /**
-     * Called when {@link Tickable} is added to {@link TickingManager}.
-     */
-    default void start() {
-    }
-
-    /**
-     * Called when {@link Tickable} is removed from {@link TickingManager}.
-     */
-    default void stop() {
-    }
+public interface Tickable extends Loadable {
 
     /**
      * The {@link TickingManager} will call this method for every tick.

@@ -1,7 +1,9 @@
-package org.plusmc.pluslib.managers;
+package org.plusmc.pluslib;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.plusmc.pluslib.managing.GeneralManager;
+import org.plusmc.pluslib.managing.PlusCommandManager;
 import org.plusmc.pluslib.util.BukkitUtil;
 import org.plusmc.pluslib.util.BungeeUtil;
 
@@ -36,20 +38,17 @@ public final class PlusLib extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        PlusCommandManager commandManager = GeneralManager.createManager(PlusCommandManager.class, this);
+
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeUtil());
         Bukkit.getPluginManager().registerEvents(new BukkitUtil.Listener(), this);
-        TickingManager.start();
-        PlusItemManager.load();
     }
 
     @Override
     public void onDisable() {
         Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, "BungeeCord");
         Bukkit.getMessenger().unregisterIncomingPluginChannel(this, "BungeeCord");
-        TickingManager.stop();
-        PlusCommandManager.unregisterAll();
-        PlusItemManager.unregisterAll();
     }
 
 }

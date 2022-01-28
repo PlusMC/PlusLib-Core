@@ -1,8 +1,11 @@
-package org.plusmc.pluslib.managers;
+package org.plusmc.pluslib.managing;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.plusmc.pluslib.plus.Tickable;
+import org.plusmc.pluslib.PlusLib;
+import org.plusmc.pluslib.managed.Loadable;
+import org.plusmc.pluslib.managed.Tickable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +14,19 @@ import java.util.List;
  * Provides a way to register and unregister {@link Tickable} objects.
  */
 @SuppressWarnings("unused")
-public class TickingManager {
-    private static List<Tickable> TICKABLES;
-    private static BukkitTask TASK;
-    private static long TICK;
-    private static BukkitTask ASYNC_TASK;
-    private static long ASYNC_TICK;
+public class TickingManager extends GeneralManager {
+    private final Plugin plugin;
+    private List<Tickable> TICKABLES;
+    private BukkitTask TASK, ASYNC_TASK;
+    private long TICK, ASYNC_TICK;
+    private int ERRORS;
 
-    private static int ERRORS;
+    protected TickingManager(Plugin plugin) {
+        super(plugin);
+        this.plugin = plugin;
+    }
 
-    private static void tick() {
+    private void tick() {
         for (Tickable tickable : TICKABLES) {
             if (!(tickable.isRunning() && !tickable.isAsync())) continue;
             try {
@@ -38,7 +44,7 @@ public class TickingManager {
         TICK++;
     }
 
-    private static void asyncTick() {
+    private void asyncTick() {
         for (Tickable tickable : TICKABLES) {
             if (!(tickable.isRunning() && tickable.isAsync())) continue;
             try {
@@ -55,36 +61,42 @@ public class TickingManager {
         ASYNC_TICK++;
     }
 
-    /**
-     * Registers a tickable to the ticking manager.
-     *
-     * @param tickable The tickable to register.
-     */
-    public static void register(Tickable tickable) {
+    @Override
+    public Class<? extends Loadable> getLoadableClass() {
+        return Tickable.class;
+    }
+
+    @Override
+    public void register(Loadable loadable) {
+        if (!(loadable instanceof Tickable tickable)) return;
         TICKABLES.add(tickable);
         PlusLib.logger().info("Registered " + tickable.getClass().getSimpleName() + " to the ticking manager.");
     }
 
-    /**
-     * Unregisters a tickable from the ticking manager.
-     *
-     * @param tickable The tickable to unregister.
-     */
-    public static void unregister(Tickable tickable) {
+    @Override
+    public void unregister(Loadable loadable) {
+        if (!(loadable instanceof Tickable tickable)) return;
         TICKABLES.add(tickable);
         PlusLib.logger().info("Unregistered " + tickable.getClass().getSimpleName() + " from the ticking manager.");
     }
 
-    static void start() {
+    @Override
+    Plugin getPlugin() {
+        return plugin;
+    }
+
+    @Override
+    protected void init() {
         TICK = 0;
         ASYNC_TICK = 0;
         ERRORS = 0;
         TICKABLES = new ArrayList<>();
-        TASK = Bukkit.getScheduler().runTaskTimer(PlusLib.getInstance(), TickingManager::tick, 0L, 1L);
-        ASYNC_TASK = Bukkit.getScheduler().runTaskTimerAsynchronously(PlusLib.getInstance(), TickingManager::asyncTick, 0L, 1L);
+        TASK = Bukkit.getScheduler().runTaskTimer(PlusLib.getInstance(), this::tick, 0L, 1L);
+        ASYNC_TASK = Bukkit.getScheduler().runTaskTimerAsynchronously(PlusLib.getInstance(), this::asyncTick, 0L, 1L);
     }
 
-    static void stop() {
+    @Override
+    protected void shutdown() {
         TASK.cancel();
         ASYNC_TASK.cancel();
         TICKABLES.clear();
