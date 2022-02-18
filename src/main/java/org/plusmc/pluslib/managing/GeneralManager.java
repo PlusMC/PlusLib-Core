@@ -58,6 +58,16 @@ public abstract class GeneralManager {
         return null;
     }
 
+    public static List<GeneralManager> getAllManagers() {
+        return new ArrayList<>(MANAGERS);
+    }
+
+    public static void shutdownAll(Plugin plugin) {
+        for (GeneralManager manager : MANAGERS)
+            if (manager.getPlugin().equals(plugin))
+                manager.shutdown();
+    }
+
     abstract Class<? extends Loadable> getLoadableClass();
 
     abstract void register(Loadable loadable);
