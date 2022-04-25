@@ -100,10 +100,9 @@ public class PlusItemManager extends BaseManager {
      *
      * @param item The item to register.
      */
-    public void register(Loadable item) {
+    protected void register(Loadable item) {
         if (!(item instanceof PlusItem pItem)) return;
         PLUS_ITEMS.add(pItem);
-        pItem.load();
         PlusLib.logger().info("Registered PlusItem: " + pItem.getID());
     }
 
@@ -114,7 +113,7 @@ public class PlusItemManager extends BaseManager {
      * @param item The item to unregister.
      */
     @Override
-    public void unregister(Loadable item) {
+    protected void unregister(Loadable item) {
         if (!(item instanceof PlusItem pItem)) return;
         PLUS_ITEMS.remove(pItem);
         item.unload();

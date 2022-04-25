@@ -63,7 +63,7 @@ public class PlusCommandManager extends BaseManager {
      * @param cmd Command to register
      */
     @Override
-    public void register(Loadable cmd) {
+    protected void register(Loadable cmd) {
         if (!(cmd instanceof PlusCommand pCmd)) return;
         PluginCommand command = createCommand(pCmd.getName(), getPlugin());
         command.setExecutor(pCmd);
@@ -73,7 +73,6 @@ public class PlusCommandManager extends BaseManager {
         command.setDescription(pCmd.getDescription());
         COMMAND_MAP.register(getPlugin().getName(), command);
         COMMANDS.add(pCmd);
-        pCmd.load();
         getPlugin().getLogger().info("Registered command: " + pCmd.getName());
     }
 
@@ -83,7 +82,7 @@ public class PlusCommandManager extends BaseManager {
      * @param cmd Command to unload
      */
     @Override
-    public void unregister(Loadable cmd) {
+    protected void unregister(Loadable cmd) {
         if (!(cmd instanceof PlusCommand pCmd)) return;
         CommandMap COMMAND_MAP = getCommandMap();
         PluginCommand command = getPlugin().getCommand(pCmd.getName());

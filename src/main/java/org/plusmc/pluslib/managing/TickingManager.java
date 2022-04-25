@@ -59,16 +59,17 @@ public class TickingManager extends BaseManager {
     }
 
     @Override
-    public void register(Loadable loadable) {
+    protected void register(Loadable loadable) {
         if (!(loadable instanceof Tickable tickable)) return;
         Tickables.add(tickable);
         getPlugin().getLogger().info("Registered " + tickable.getClass().getSimpleName() + " to the ticking manager.");
     }
 
     @Override
-    public void unregister(Loadable loadable) {
+    protected void unregister(Loadable loadable) {
         if (!(loadable instanceof Tickable tickable)) return;
-        Tickables.add(tickable);
+        Tickables.remove(tickable);
+        tickable.unload();
         getPlugin().getLogger().info("Unregistered " + tickable.getClass().getSimpleName() + " from the ticking manager.");
     }
 

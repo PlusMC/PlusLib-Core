@@ -6,6 +6,7 @@ import org.plusmc.pluslib.managed.Loadable;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,10 +47,21 @@ public abstract class BaseManager {
      * @param object The object to register.
      */
     public static void registerAny(Loadable object, JavaPlugin plugin) {
+        boolean registered = false;
+        for (BaseManager manager : MANAGERS) {
+            if (manager.getPlugin().equals(plugin) && Arrays.stream(object.getClass().getInterfaces()).anyMatch(i -> i.equals(manager.getManaged()))) {
+                manager.register(object);
+                registered = true;
+            }
+        }
+        if(registered)
+            object.load();
+    }
+
+    public static void unregisterAny(Loadable object, JavaPlugin plugin) {
         for (BaseManager manager : MANAGERS)
-            if (manager.getPlugin().equals(plugin))
-                if (manager.getManaged().equals(object.getClass()))
-                    manager.register(object);
+            if (manager.getPlugin().equals(plugin) && Arrays.stream(object.getClass().getInterfaces()).anyMatch(i -> i.equals(manager.getManaged())))
+                manager.unregister(object);
 
     }
 
