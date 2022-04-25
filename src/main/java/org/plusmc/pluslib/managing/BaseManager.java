@@ -12,23 +12,28 @@ import java.util.List;
  * Registers all the commands, items, and tickables to their respectable managers.
  */
 @SuppressWarnings("unused")
-public abstract class GeneralManager {
-    private static final List<GeneralManager> MANAGERS = new ArrayList<>();
+public abstract class BaseManager {
+    private static final List<BaseManager> MANAGERS = new ArrayList<>();
 
-    protected GeneralManager(Plugin plugin) {
+    private final Plugin plugin;
+    protected BaseManager(Plugin plugin) {
+        this.plugin = plugin;
         MANAGERS.add(this);
     }
 
     @Nullable
-    public static <T extends GeneralManager> T createManager(Class<T> manager, Plugin plugin) {
-        T obj = GeneralManager.getManager(plugin, manager);
+    public static <T extends BaseManager> T createManager(Class<T> manager, Plugin plugin) {
+        T obj = BaseManager.getManager(plugin, manager);
         if (obj != null)
             return obj;
 
         try {
-            Constructor<T> constructor = manager.getConstructor(Plugin.class);
+            Constructor<T> constructor = manager.getDeclaredConstructor(Plugin.class);
+            constructor.setAccessible(true);
             obj = constructor.newInstance(plugin);
+            obj.init();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
 
@@ -41,40 +46,42 @@ public abstract class GeneralManager {
      * @param object The object to register.
      */
     public static void registerAny(Loadable object, Plugin plugin) {
-        for (GeneralManager manager : MANAGERS)
+        for (BaseManager manager : MANAGERS)
             if (manager.getPlugin().equals(plugin))
-                if (manager.getLoadableClass().equals(object.getClass()))
+                if (manager.getManaged().equals(object.getClass()))
                     manager.register(object);
 
     }
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public static <T extends GeneralManager> T getManager(Plugin plugin, Class<T> manager) {
-        for (GeneralManager m : MANAGERS)
+    public static <T extends BaseManager> T getManager(Plugin plugin, Class<T> manager) {
+        for (BaseManager m : MANAGERS)
             if (m.getClass().equals(manager) && m.getPlugin().equals(plugin))
                 return (T) m;
 
         return null;
     }
 
-    public static List<GeneralManager> getAllManagers() {
+    public static List<BaseManager> getAllManagers() {
         return new ArrayList<>(MANAGERS);
     }
 
     public static void shutdownAll(Plugin plugin) {
-        for (GeneralManager manager : MANAGERS)
+        for (BaseManager manager : MANAGERS)
             if (manager.getPlugin().equals(plugin))
                 manager.shutdown();
     }
 
-    abstract Class<? extends Loadable> getLoadableClass();
+    abstract Class<? extends Loadable> getManaged();
 
     abstract void register(Loadable loadable);
 
     abstract void unregister(Loadable loadable);
 
-    abstract Plugin getPlugin();
+    Plugin getPlugin() {
+        return plugin;
+    }
 
     abstract protected void init();
 

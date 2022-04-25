@@ -28,18 +28,16 @@ import java.util.Objects;
  * Registers and manages all PlusItems.
  */
 @SuppressWarnings("unused")
-public class PlusItemManager extends GeneralManager {
+public class PlusItemManager extends BaseManager {
     /**
      * The NamespacedKey of the PlusItem.
      */
     public static NamespacedKey PLUS_ITEM_KEY = new NamespacedKey(PlusLib.getInstance(), "custom_item");
     private static List<PlusItem> PLUS_ITEMS;
 
-    private final Plugin plugin;
 
     protected PlusItemManager(Plugin plugin) {
         super(plugin);
-        this.plugin = plugin;
     }
 
     /**
@@ -123,10 +121,6 @@ public class PlusItemManager extends GeneralManager {
         PlusLib.logger().info("Unregistered PlusItem: " + pItem.getID());
     }
 
-    @Override
-    Plugin getPlugin() {
-        return plugin;
-    }
 
     @Override
     protected void init() {
@@ -145,7 +139,7 @@ public class PlusItemManager extends GeneralManager {
     }
 
     @Override
-    public Class<? extends Loadable> getLoadableClass() {
+    public Class<? extends Loadable> getManaged() {
         return PlusItem.class;
     }
 

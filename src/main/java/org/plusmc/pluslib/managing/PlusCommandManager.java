@@ -5,7 +5,6 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
-import org.plusmc.pluslib.PlusLib;
 import org.plusmc.pluslib.managed.Loadable;
 import org.plusmc.pluslib.managed.PlusCommand;
 
@@ -19,17 +18,15 @@ import java.util.List;
  * Using reflection.
  */
 @SuppressWarnings("unused")
-public class PlusCommandManager extends GeneralManager {
+public class PlusCommandManager extends BaseManager {
     private final CommandMap COMMAND_MAP = getCommandMap();
-    private final Plugin plugin;
     private List<PlusCommand> COMMANDS = new ArrayList<>();
 
     protected PlusCommandManager(Plugin plugin) {
         super(plugin);
-        this.plugin = plugin;
     }
 
-    private static PluginCommand createCommand(String name, Plugin plugin) {
+    private PluginCommand createCommand(String name, Plugin plugin) {
         PluginCommand command = null;
         try {
             Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
@@ -37,13 +34,13 @@ public class PlusCommandManager extends GeneralManager {
 
             command = c.newInstance(name, plugin);
         } catch (Exception e) {
-            PlusLib.logger().severe("Failed to create PluginCommand");
+            getPlugin().getLogger().severe("Failed to create PluginCommand");
         }
 
         return command;
     }
 
-    private static CommandMap getCommandMap() {
+    private CommandMap getCommandMap() {
         CommandMap commandMap = null;
         try {
             if (Bukkit.getPluginManager() instanceof SimplePluginManager) {
@@ -53,7 +50,7 @@ public class PlusCommandManager extends GeneralManager {
                 commandMap = (CommandMap) f.get(Bukkit.getPluginManager());
             }
         } catch (Exception e) {
-            PlusLib.logger().severe("Failed to get CommandMap");
+            getPlugin().getLogger().severe("Failed to get CommandMap");
         }
 
         return commandMap;
@@ -76,7 +73,7 @@ public class PlusCommandManager extends GeneralManager {
         COMMAND_MAP.register(pCmd.getPlugin().getName(), command);
         COMMANDS.add(pCmd);
         pCmd.load();
-        PlusLib.logger().info("Registered command: " + pCmd.getName());
+        getPlugin().getLogger().info("Registered command: " + pCmd.getName());
     }
 
     /**
@@ -90,17 +87,12 @@ public class PlusCommandManager extends GeneralManager {
         CommandMap COMMAND_MAP = getCommandMap();
         PluginCommand command = pCmd.getPlugin().getCommand(pCmd.getName());
         if (command == null) {
-            PlusLib.logger().warning("Failed to unregister command: " + pCmd.getName());
+            getPlugin().getLogger().warning("Failed to unregister command: " + pCmd.getName());
             return;
         }
         command.unregister(COMMAND_MAP);
         pCmd.unload();
-        PlusLib.logger().info("Unregistered command: " + pCmd.getName());
-    }
-
-    @Override
-    Plugin getPlugin() {
-        return plugin;
+        getPlugin().getLogger().info("Unregistered command: " + pCmd.getName());
     }
 
     @Override
@@ -109,7 +101,7 @@ public class PlusCommandManager extends GeneralManager {
     }
 
     @Override
-    public Class<? extends Loadable> getLoadableClass() {
+    public Class<? extends Loadable> getManaged() {
         return PlusCommand.class;
     }
 

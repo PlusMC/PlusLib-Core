@@ -1,7 +1,6 @@
 package org.plusmc.pluslib.managed;
 
 public interface Loadable {
-    void load();
-
-    void unload();
+    default void load() {};
+    default void unload() {};
 }
