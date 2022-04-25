@@ -6,7 +6,7 @@
 
     <groupId>org.plusmc</groupId>
     <artifactId>PlusLib</artifactId>
-    <version>INDEV-0.2.1</version>
+    <version>INDEV-0.2.2</version>
     <packaging>jar</packaging>
 
     <name>PlusLib</name>

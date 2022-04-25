@@ -5,6 +5,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.plusmc.pluslib.managed.Loadable;
 import org.plusmc.pluslib.managed.PlusCommand;
 
@@ -22,11 +23,11 @@ public class PlusCommandManager extends BaseManager {
     private final CommandMap COMMAND_MAP = getCommandMap();
     private List<PlusCommand> COMMANDS = new ArrayList<>();
 
-    protected PlusCommandManager(Plugin plugin) {
+    protected PlusCommandManager(JavaPlugin plugin) {
         super(plugin);
     }
 
-    private PluginCommand createCommand(String name, Plugin plugin) {
+    private PluginCommand createCommand(String name, JavaPlugin plugin) {
         PluginCommand command = null;
         try {
             Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
@@ -64,13 +65,13 @@ public class PlusCommandManager extends BaseManager {
     @Override
     public void register(Loadable cmd) {
         if (!(cmd instanceof PlusCommand pCmd)) return;
-        PluginCommand command = createCommand(pCmd.getName(), pCmd.getPlugin());
+        PluginCommand command = createCommand(pCmd.getName(), getPlugin());
         command.setExecutor(pCmd);
         command.setTabCompleter(pCmd);
         command.setPermission(pCmd.getPermission());
         command.setUsage(pCmd.getUsage());
         command.setDescription(pCmd.getDescription());
-        COMMAND_MAP.register(pCmd.getPlugin().getName(), command);
+        COMMAND_MAP.register(getPlugin().getName(), command);
         COMMANDS.add(pCmd);
         pCmd.load();
         getPlugin().getLogger().info("Registered command: " + pCmd.getName());
@@ -85,7 +86,7 @@ public class PlusCommandManager extends BaseManager {
     public void unregister(Loadable cmd) {
         if (!(cmd instanceof PlusCommand pCmd)) return;
         CommandMap COMMAND_MAP = getCommandMap();
-        PluginCommand command = pCmd.getPlugin().getCommand(pCmd.getName());
+        PluginCommand command = getPlugin().getCommand(pCmd.getName());
         if (command == null) {
             getPlugin().getLogger().warning("Failed to unregister command: " + pCmd.getName());
             return;

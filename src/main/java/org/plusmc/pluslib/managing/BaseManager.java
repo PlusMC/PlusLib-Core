@@ -1,6 +1,6 @@
 package org.plusmc.pluslib.managing;
 
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 import org.plusmc.pluslib.managed.Loadable;
 
@@ -15,20 +15,20 @@ import java.util.List;
 public abstract class BaseManager {
     private static final List<BaseManager> MANAGERS = new ArrayList<>();
 
-    private final Plugin plugin;
-    protected BaseManager(Plugin plugin) {
+    private final JavaPlugin plugin;
+    protected BaseManager(JavaPlugin plugin) {
         this.plugin = plugin;
         MANAGERS.add(this);
     }
 
     @Nullable
-    public static <T extends BaseManager> T createManager(Class<T> manager, Plugin plugin) {
+    public static <T extends BaseManager> T createManager(Class<T> manager, JavaPlugin plugin) {
         T obj = BaseManager.getManager(plugin, manager);
         if (obj != null)
             return obj;
 
         try {
-            Constructor<T> constructor = manager.getDeclaredConstructor(Plugin.class);
+            Constructor<T> constructor = manager.getDeclaredConstructor(JavaPlugin.class);
             constructor.setAccessible(true);
             obj = constructor.newInstance(plugin);
             obj.init();
@@ -45,7 +45,7 @@ public abstract class BaseManager {
      *
      * @param object The object to register.
      */
-    public static void registerAny(Loadable object, Plugin plugin) {
+    public static void registerAny(Loadable object, JavaPlugin plugin) {
         for (BaseManager manager : MANAGERS)
             if (manager.getPlugin().equals(plugin))
                 if (manager.getManaged().equals(object.getClass()))
@@ -55,7 +55,7 @@ public abstract class BaseManager {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public static <T extends BaseManager> T getManager(Plugin plugin, Class<T> manager) {
+    public static <T extends BaseManager> T getManager(JavaPlugin plugin, Class<T> manager) {
         for (BaseManager m : MANAGERS)
             if (m.getClass().equals(manager) && m.getPlugin().equals(plugin))
                 return (T) m;
@@ -67,7 +67,7 @@ public abstract class BaseManager {
         return new ArrayList<>(MANAGERS);
     }
 
-    public static void shutdownAll(Plugin plugin) {
+    public static void shutdownAll(JavaPlugin plugin) {
         for (BaseManager manager : MANAGERS)
             if (manager.getPlugin().equals(plugin))
                 manager.shutdown();
@@ -79,7 +79,7 @@ public abstract class BaseManager {
 
     abstract void unregister(Loadable loadable);
 
-    Plugin getPlugin() {
+    JavaPlugin getPlugin() {
         return plugin;
     }
 

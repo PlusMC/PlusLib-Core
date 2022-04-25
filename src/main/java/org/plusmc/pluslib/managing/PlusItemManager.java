@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 import org.plusmc.pluslib.PlusLib;
 import org.plusmc.pluslib.managed.Loadable;
@@ -36,7 +36,7 @@ public class PlusItemManager extends BaseManager {
     private static List<PlusItem> PLUS_ITEMS;
 
 
-    protected PlusItemManager(Plugin plugin) {
+    protected PlusItemManager(JavaPlugin plugin) {
         super(plugin);
     }
 

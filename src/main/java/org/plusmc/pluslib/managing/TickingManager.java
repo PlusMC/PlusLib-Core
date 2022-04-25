@@ -1,7 +1,7 @@
 package org.plusmc.pluslib.managing;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.plusmc.pluslib.managed.Loadable;
 import org.plusmc.pluslib.managed.Tickable;
@@ -19,7 +19,7 @@ public class TickingManager extends BaseManager {
     private long TICK, ASYNC_TICK;
     private int errorCount;
 
-    protected TickingManager(Plugin plugin) {
+    protected TickingManager(JavaPlugin plugin) {
         super(plugin);
     }
 

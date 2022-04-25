@@ -46,13 +46,6 @@ public interface PlusCommand extends CommandExecutor, TabCompleter, Loadable {
     String getDescription();
 
     /**
-     * Gets the plugin that this command belongs to.
-     *
-     * @return Plugin that this command belongs to
-     */
-    JavaPlugin getPlugin();
-
-    /**
      * Gets the completions of the command.
      *
      * @param index Index of the current argument
