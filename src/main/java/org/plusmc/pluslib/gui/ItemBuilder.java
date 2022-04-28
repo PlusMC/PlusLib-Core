@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.util;
+package org.plusmc.pluslib.gui;
 
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -15,6 +15,12 @@ public class ItemBuilder {
     private final ItemMeta meta;
 
     public ItemBuilder(Material material) {
+        this.item = new ItemStack(material);
+        this.meta = this.item.getItemMeta();
+    }
+
+    public ItemBuilder(boolean random) {
+        Material material = Material.values()[(int) (Math.random() * Material.values().length)];
         this.item = new ItemStack(material);
         this.meta = this.item.getItemMeta();
     }
