@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.plus;
+package org.plusmc.pluslib.managed;
 
 import org.bukkit.Material;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.plusmc.pluslib.managers.PlusItemManager;
+import org.plusmc.pluslib.managing.PlusItemManager;
 
 import java.util.Arrays;
 
@@ -16,7 +16,7 @@ import java.util.Arrays;
  * Makes it easier to create custom items.
  */
 @SuppressWarnings("unused")
-public interface PlusItem {
+public interface PlusItem extends Loadable {
     /**
      * @return The ID of the item
      */
@@ -36,20 +36,6 @@ public interface PlusItem {
      * @return The material of the item
      */
     Material getMaterial();
-
-    /**
-     * Called when the plugin is unloaded
-     */
-    default void unload() {
-        //ignore
-    }
-
-    /**
-     * Called when the plugin is loaded
-     */
-    default void load() {
-        //ignore
-    }
 
     /**
      * Called when the item is used to damage an entity

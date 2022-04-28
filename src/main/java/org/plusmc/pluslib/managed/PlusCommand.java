@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.plus;
+package org.plusmc.pluslib.managed;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.plusmc.pluslib.managers.PlusCommandManager;
+import org.plusmc.pluslib.managing.PlusCommandManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  * Useful for making complicated commands easier to write.
  */
 @SuppressWarnings("unused")
-public interface PlusCommand extends CommandExecutor, TabCompleter {
+public interface PlusCommand extends CommandExecutor, TabCompleter, Loadable {
     /**
      * Gets the command name.
      *
@@ -46,31 +46,12 @@ public interface PlusCommand extends CommandExecutor, TabCompleter {
     String getDescription();
 
     /**
-     * Gets the plugin that this command belongs to.
-     *
-     * @return Plugin that this command belongs to
-     */
-    JavaPlugin getPlugin();
-
-    /**
      * Gets the completions of the command.
      *
      * @param index Index of the current argument
      * @return Completions of the command
      */
     List<String> getCompletions(int index);
-
-    /**
-     * Runs when the command is loaded.
-     */
-    default void load() {
-    }
-
-    /**
-     * Runs when the command is unloaded.
-     */
-    default void unload() {
-    }
 
     /**
      * Filters the completions for the given argument.

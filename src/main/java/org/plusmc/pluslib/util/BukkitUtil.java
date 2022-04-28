@@ -13,7 +13,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class BukkitUtil {
-    private static HashMap<Player, Long> JOIN_TIMES;
+    private final static HashMap<Player, Long> JOIN_TIMES = new HashMap<>();
 
     /**
      * Get a list of online player's names
@@ -38,13 +38,6 @@ public class BukkitUtil {
      * Listener for {@link BukkitUtil} (DO NOT REGISTER THIS LISTENER FOR INTERNAL USE ONLY)
      */
     public static class Listener implements org.bukkit.event.Listener {
-        /**
-         * Initialize {@link BukkitUtil}
-         */
-        public Listener() {
-            JOIN_TIMES = new HashMap<>();
-        }
-
         /**
          * Event handler for {@link PlayerJoinEvent}
          *

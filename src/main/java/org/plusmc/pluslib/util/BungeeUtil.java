@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
-import org.plusmc.pluslib.managers.PlusLib;
+import org.plusmc.pluslib.PlusLib;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;

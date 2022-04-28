@@ -1,6 +1,6 @@
 name: PlusLib
 version: '${project.version}'
-main: org.plusmc.pluslib.managers.PlusLib
+main: org.plusmc.pluslib.PlusLib
 api-version: 1.18
 authors: [ OakleyCord ]
 description: A library plugin for the Plus MC server
