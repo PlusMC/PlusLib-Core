@@ -2,6 +2,7 @@ package org.plusmc.pluslib.managing;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.plusmc.pluslib.gui.GUIElement;
@@ -9,6 +10,7 @@ import org.plusmc.pluslib.managed.Loadable;
 import org.plusmc.pluslib.managed.PlusGUI;
 
 public class GUIManager extends BaseManager{
+    private static boolean isInitialized = false;
 
     protected GUIManager(JavaPlugin plugin) {
         super(plugin);
@@ -33,11 +35,14 @@ public class GUIManager extends BaseManager{
 
     @Override
     protected void init() {
+        if(isInitialized) return;
         Bukkit.getPluginManager().registerEvents(new Listener(), getPlugin());
+        isInitialized = true;
     }
 
     @Override
     protected void shutdown() {
+        isInitialized = false;
     }
 
     private static class Listener implements org.bukkit.event.Listener {

@@ -42,8 +42,6 @@ public final class PlusLib extends JavaPlugin {
     @Override
     public void onEnable() {
         BaseManager.createManager(PlusCommandManager.class, this);
-        BaseManager.createManager(GUIManager.class, this);
-        BaseManager.registerAny(new GUITest(), this);
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeUtil());
