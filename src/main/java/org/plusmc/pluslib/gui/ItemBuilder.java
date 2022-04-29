@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ItemBuilder {
 
@@ -42,6 +43,11 @@ public class ItemBuilder {
 
     public ItemBuilder setLore(final String... lore) {
         meta.setLore(Arrays.asList(lore));
+        return this;
+    }
+
+    public ItemBuilder setLore(final List<String> lore) {
+        meta.setLore(lore);
         return this;
     }
 
