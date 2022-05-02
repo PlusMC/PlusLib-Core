@@ -1,0 +1,4 @@
+name: PlusLibBungee
+version: '${project.version}'
+main: org.plusmc.pluslib.bungee.PlusLibBungee
+author: OakleyCord

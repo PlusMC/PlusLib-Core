@@ -1,13 +1,12 @@
-package org.plusmc.pluslib.managing;
+package org.plusmc.pluslib.bukkit.managing;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.plusmc.pluslib.gui.GUIElement;
-import org.plusmc.pluslib.managed.Loadable;
-import org.plusmc.pluslib.managed.PlusGUI;
+import org.plusmc.pluslib.bukkit.gui.GUIElement;
+import org.plusmc.pluslib.bukkit.managed.Loadable;
+import org.plusmc.pluslib.bukkit.managed.PlusGUI;
 
 public class GUIManager extends BaseManager{
     private static boolean isInitialized = false;

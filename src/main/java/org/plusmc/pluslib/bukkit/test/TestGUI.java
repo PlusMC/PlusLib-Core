@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.test;
+package org.plusmc.pluslib.bukkit.test;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -6,9 +6,9 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.plusmc.pluslib.gui.GUIElement;
-import org.plusmc.pluslib.gui.ItemBuilder;
-import org.plusmc.pluslib.managed.PlusGUI;
+import org.plusmc.pluslib.bukkit.gui.GUIElement;
+import org.plusmc.pluslib.bukkit.gui.ItemBuilder;
+import org.plusmc.pluslib.bukkit.managed.PlusGUI;
 
 import java.util.Random;
 

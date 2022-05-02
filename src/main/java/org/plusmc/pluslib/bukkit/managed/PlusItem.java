@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.managed;
+package org.plusmc.pluslib.bukkit.managed;
 
 import org.bukkit.Material;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.plusmc.pluslib.managing.PlusItemManager;
+import org.plusmc.pluslib.bukkit.managing.PlusItemManager;
 
 import java.util.Arrays;
 

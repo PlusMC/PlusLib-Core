@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.managing;
+package org.plusmc.pluslib.bukkit.managing;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -15,9 +15,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-import org.plusmc.pluslib.PlusLib;
-import org.plusmc.pluslib.managed.Loadable;
-import org.plusmc.pluslib.managed.PlusItem;
+import org.plusmc.pluslib.bukkit.PlusLib;
+import org.plusmc.pluslib.bukkit.managed.Loadable;
+import org.plusmc.pluslib.bukkit.managed.PlusItem;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -100,6 +100,7 @@ public class PlusItemManager extends BaseManager {
      *
      * @param item The item to register.
      */
+    @Override
     protected void register(Loadable item) {
         if (!(item instanceof PlusItem pItem)) return;
         PLUS_ITEMS.add(pItem);

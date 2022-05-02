@@ -1,12 +1,12 @@
-package org.plusmc.pluslib.test;
+package org.plusmc.pluslib.bukkit.test;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.plusmc.pluslib.gui.GUIElement;
-import org.plusmc.pluslib.gui.ItemBuilder;
-import org.plusmc.pluslib.managed.PaginatedGUI;
+import org.plusmc.pluslib.bukkit.gui.GUIElement;
+import org.plusmc.pluslib.bukkit.gui.ItemBuilder;
+import org.plusmc.pluslib.bukkit.managed.PaginatedGUI;
 
 import java.util.HashMap;
 import java.util.Map;

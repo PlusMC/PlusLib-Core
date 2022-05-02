@@ -1,6 +1,6 @@
-package org.plusmc.pluslib.managed;
+package org.plusmc.pluslib.bukkit.managed;
 
-import org.plusmc.pluslib.gui.GUIElement;
+import org.plusmc.pluslib.bukkit.gui.GUIElement;
 
 import java.util.HashMap;
 import java.util.Map;

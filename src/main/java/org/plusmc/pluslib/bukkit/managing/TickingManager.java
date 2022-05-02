@@ -1,10 +1,10 @@
-package org.plusmc.pluslib.managing;
+package org.plusmc.pluslib.bukkit.managing;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.plusmc.pluslib.managed.Loadable;
-import org.plusmc.pluslib.managed.Tickable;
+import org.plusmc.pluslib.bukkit.managed.Loadable;
+import org.plusmc.pluslib.bukkit.managed.Tickable;
 
 import java.util.ArrayList;
 import java.util.List;

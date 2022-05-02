@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.managed;
+package org.plusmc.pluslib.bukkit.managed;
 
 public interface Loadable {
     default void load() {};

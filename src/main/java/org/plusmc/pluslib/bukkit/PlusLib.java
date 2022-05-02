@@ -1,13 +1,13 @@
-package org.plusmc.pluslib;
+package org.plusmc.pluslib.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.plusmc.pluslib.managing.BaseManager;
-import org.plusmc.pluslib.managing.GUIManager;
-import org.plusmc.pluslib.managing.PlusCommandManager;
-import org.plusmc.pluslib.test.GUITest;
-import org.plusmc.pluslib.util.BukkitUtil;
-import org.plusmc.pluslib.util.BungeeUtil;
+import org.plusmc.pluslib.bukkit.managing.BaseManager;
+import org.plusmc.pluslib.bukkit.managing.PlusCommandManager;
+import org.plusmc.pluslib.bukkit.test.GUITest;
+import org.plusmc.pluslib.bukkit.util.BukkitUtil;
+import org.plusmc.pluslib.bukkit.util.BungeeUtil;
+
 
 import java.util.logging.Logger;
 
@@ -41,17 +41,22 @@ public final class PlusLib extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        BaseManager.createManager(PlusCommandManager.class, this);
-
+        BungeeUtil util = new BungeeUtil();
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeUtil());
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "plusmc:bungee");
+
+        Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", util);
+        Bukkit.getMessenger().registerIncomingPluginChannel(this, "plusmc:bungee", util);
         Bukkit.getPluginManager().registerEvents(new BukkitUtil.Listener(), this);
     }
 
     @Override
     public void onDisable() {
-        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, "BungeeCord");
         Bukkit.getMessenger().unregisterIncomingPluginChannel(this, "BungeeCord");
+        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, "BungeeCord");
+
+        Bukkit.getMessenger().unregisterIncomingPluginChannel(this, "plusmc:bungee");
+        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, "plusmc:bungee");
     }
 
 }

@@ -1,6 +1,6 @@
-package org.plusmc.pluslib.managed;
+package org.plusmc.pluslib.bukkit.managed;
 
-import org.plusmc.pluslib.managing.TickingManager;
+import org.plusmc.pluslib.bukkit.managing.TickingManager;
 
 /**
  * A class has a tick method that is called every tick.

@@ -1,8 +1,8 @@
-package org.plusmc.pluslib.managing;
+package org.plusmc.pluslib.bukkit.managing;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-import org.plusmc.pluslib.managed.Loadable;
+import org.plusmc.pluslib.bukkit.managed.Loadable;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;

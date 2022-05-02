@@ -6,7 +6,7 @@
 
     <groupId>org.plusmc</groupId>
     <artifactId>PlusLib</artifactId>
-    <version>0.3-INDEV</version>
+    <version>0.5.2-INDEV</version>
     <packaging>jar</packaging>
 
     <name>PlusLib</name>
@@ -40,6 +40,12 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.mongodb</include>
+                                    <include>org.mongodb.morphia</include>
+                                </includes>
+                            </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
@@ -102,6 +108,22 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>23.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb.morphia</groupId>
+            <artifactId>morphia</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.12.10</version>
+        </dependency>
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.18-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

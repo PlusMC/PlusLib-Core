@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.managing;
+package org.plusmc.pluslib.bukkit.managing;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
@@ -6,8 +6,8 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.plusmc.pluslib.managed.Loadable;
-import org.plusmc.pluslib.managed.PlusCommand;
+import org.plusmc.pluslib.bukkit.managed.Loadable;
+import org.plusmc.pluslib.bukkit.managed.PlusCommand;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

@@ -1,10 +1,11 @@
-package org.plusmc.pluslib.test;
+package org.plusmc.pluslib.bukkit.test;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.plusmc.pluslib.managed.PlusCommand;
+import org.plusmc.pluslib.bukkit.managed.PlusCommand;
+import org.plusmc.pluslib.bukkit.util.BungeeUtil;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class GUITest implements PlusCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(sender instanceof Player p) p.openInventory(new PageTestGUI().getInventory());
+        BungeeUtil.checkPlusMC();
         return true;
     }
 }

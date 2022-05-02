@@ -1,10 +1,10 @@
-package org.plusmc.pluslib.managed;
+package org.plusmc.pluslib.bukkit.managed;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.plusmc.pluslib.gui.GUIElement;
+import org.plusmc.pluslib.bukkit.gui.GUIElement;
 
 import java.util.*;
 

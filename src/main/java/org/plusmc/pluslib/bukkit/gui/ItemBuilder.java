@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.gui;
+package org.plusmc.pluslib.bukkit.gui;
 
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
