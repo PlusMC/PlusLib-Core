@@ -1,5 +1,7 @@
 package org.plusmc.pluslib.mongo.util;
 
+import java.util.UUID;
+
 public class MinecraftUtil {
 
     public static boolean isBukkit() {
@@ -20,15 +22,15 @@ public class MinecraftUtil {
         }
     }
 
-    public static Object getPlayer(String UUID) {
+    public static Object getPlayer(String uuid) {
         try {
             if(isBukkit()) {
                 Class<?> bukkit = Class.forName("org.bukkit.Bukkit");
-                return bukkit.getDeclaredMethod("getPlayer", String.class).invoke(null, UUID);
+                return bukkit.getDeclaredMethod("getPlayer", UUID.class).invoke(null, UUID.fromString(uuid));
             } else if (isBungee()) {
                 Class<?> bungee = Class.forName("net.md_5.bungee.api.ProxyServer");
                 Object proxy = bungee.getDeclaredMethod("getInstance").invoke(null);
-                return bungee.getDeclaredMethod("getPlayer", String.class).invoke(proxy, UUID);
+                return bungee.getDeclaredMethod("getPlayer", UUID.class).invoke(proxy, UUID.fromString(uuid));
             }
             return null;
         } catch (Exception ex) {
@@ -65,7 +67,7 @@ public class MinecraftUtil {
 
     public static void kickPlayer(Object player, String message) {
         try {
-            if(!isBukkit()) {
+            if(isBukkit()) {
                 Class<?> playerClass = Class.forName("org.bukkit.entity.Player");
                 playerClass.getMethod("kickPlayer", String.class).invoke(player, message);
             } else if (isBungee()) {

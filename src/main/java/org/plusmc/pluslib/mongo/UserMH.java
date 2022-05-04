@@ -8,10 +8,10 @@ import java.util.Map;
 @Embedded
 public class UserMH {
     private Map<String, Long> personalBests;
-    private int totalKills;
-    private int totalDeaths;
-    private int totalWins;
-    private int totalLosses;
+    private int totalKills, totalDeaths;
+    private int totalWins, winsAsRunner, winsAsHunter;
+    private int totalLosses, lossAsRunner, lossAsHunter;
+    private int totalGames;
 
     public UserMH() {
     }
@@ -34,19 +34,75 @@ public class UserMH {
         }
     }
 
-    public void addTotalKills(int value) {
-        totalKills += value;
+    public void addKill() {
+        totalKills++;
     }
 
-    public void addTotalDeaths(int value) {
-        totalDeaths += value;
+    public void addDeath() {
+        totalDeaths++;
     }
 
-    public void addTotalWins(int value) {
-        totalWins += value;
+    public void addWinRunner() {
+        winsAsRunner++;
+        totalWins++;
     }
 
-    public void addTotalLosses(int value) {
-        totalLosses += value;
+    public void addWinHunter() {
+        winsAsHunter++;
+        totalWins++;
+    }
+
+    public void addLossRunner() {
+        lossAsRunner++;
+        totalLosses++;
+    }
+
+    public void addLossHunter() {
+        lossAsHunter++;
+        totalLosses++;
+    }
+
+    public void addGame() {
+        totalGames++;
+    }
+
+    public int getTotalKills() {
+        return totalKills;
+    }
+
+    public int getTotalDeaths() {
+        return totalDeaths;
+    }
+
+    public int getTotalWins() {
+        return totalWins;
+    }
+
+    public int getWinsAsRunner() {
+        return winsAsRunner;
+    }
+
+    public int getWinsAsHunter() {
+        return winsAsHunter;
+    }
+
+    public int getTotalLosses() {
+        return totalLosses;
+    }
+
+    public int getLossAsRunner() {
+        return lossAsRunner;
+    }
+
+    public int getLossAsHunter() {
+        return lossAsHunter;
+    }
+
+    public int getTotalGames() {
+        return totalGames;
+    }
+
+    public Map<String, Long> getPersonalBests() {
+        return Map.copyOf(personalBests);
     }
 }

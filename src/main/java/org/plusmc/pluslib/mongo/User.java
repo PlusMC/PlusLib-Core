@@ -18,17 +18,13 @@ public class User {
     @Indexed
     private String discordName;
 
-    private double browniePoints;
-    private double totalBrowniePoints;
-    private double totalSpent;
+    private long browniePoints, totalPoints, totalSpent;
 
-    private double pointsForNextLevel;
+    private long pointsForNextLevel;
     private int level;
 
-    private long firstLogin;
-    private long lastLogin;
+    private long firstLogin, lastLogin;
 
-    private boolean isBanned = false;
     private String banReason = null;
     private long banTime = 0;
 
@@ -51,7 +47,7 @@ public class User {
             this.pointsForNextLevel = 100;
             this.level = 1;
             this.browniePoints = 0;
-            this.totalBrowniePoints = 0;
+            this.totalPoints = 0;
             this.totalSpent = 0;
         }
     }
@@ -61,11 +57,11 @@ public class User {
         this.discordName = name;
     }
 
-    public void addPoints(double points) {
+    public void addPoints(long points) {
         this.browniePoints += points;
-        this.totalBrowniePoints += points;
+        this.totalPoints += points;
         int oldLevel = this.level;
-        while (this.pointsForNextLevel <= this.totalBrowniePoints) {
+        while (this.pointsForNextLevel <= this.totalPoints) {
             this.pointsForNextLevel += this.pointsForNextLevel * 0.75;
             this.level++;
         }
@@ -75,23 +71,24 @@ public class User {
         }
     }
 
-    public void addPoints(double points, String reason) {
+    public void addPoints(long points, String reason) {
         this.browniePoints += points;
-        this.totalBrowniePoints += points;
+        this.totalPoints += points;
         int oldLevel = this.level;
-        while (this.pointsForNextLevel <= this.totalBrowniePoints) {
+        while (this.pointsForNextLevel <= this.totalPoints) {
             this.pointsForNextLevel += this.pointsForNextLevel * 0.75;
             this.level++;
         }
-        String pointMessage = reason + "§6§l " + points + " Brownie Points!";
+        String pointMessage = reason + "§6§l +" + points + " Brownie Points!";
         MinecraftUtil.sendMessage(this.getPlayer(), pointMessage);
         if(oldLevel < this.level) {
             String levelUpMessage = "§6§lLevel Up! " + oldLevel + " -> " + this.level;
             MinecraftUtil.sendMessage(this.getPlayer(), levelUpMessage);
+            MinecraftUtil.playSound(this.getPlayer(), "entity.player.levelup", 1.0F, 2.0F);
         }
     }
 
-    public boolean spendPoints(double points) {
+    public boolean spendPoints(long points) {
         if (this.browniePoints >= points) {
             this.browniePoints -= points;
             this.totalSpent += points;
@@ -100,11 +97,11 @@ public class User {
         return false;
     }
 
-    public double getPoints() {
+    public long getPoints() {
         return this.browniePoints;
     }
 
-    public double getTotalSpent() {
+    public long getTotalSpent() {
         return this.totalSpent;
     }
 
@@ -113,15 +110,13 @@ public class User {
     }
 
     public void ban(String reason, long time) {
-        this.isBanned = true;
         this.banReason = reason;
-        this.banTime = time;
-        String message = "§cYou have been banned for " + OtherUtil.formatTime(time) + ", reason: " + reason;
+        this.banTime = time + System.currentTimeMillis();
+        String message = "§cYou have been banned for " + OtherUtil.formatTime(time) + ", Reason: " + reason;
         MinecraftUtil.kickPlayer(this.getPlayer(), message);
     }
 
     public void unban() {
-        this.isBanned = false;
         this.banReason = null;
         this.banTime = 0;
     }
@@ -134,7 +129,7 @@ public class User {
     }
 
     public boolean isBanned() {
-        return this.isBanned;
+        return this.banTime > System.currentTimeMillis();
     }
 
     public String getBanReason() {
