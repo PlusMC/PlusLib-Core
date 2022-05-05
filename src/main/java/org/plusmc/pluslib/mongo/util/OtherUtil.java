@@ -2,6 +2,10 @@ package org.plusmc.pluslib.mongo.util;
 
 public class OtherUtil {
 
+    private OtherUtil() {
+        throw new IllegalAccessError("Utility class");
+    }
+
 
     //thank you github copilot :praying_hands:
     public static String formatTime(long time) {

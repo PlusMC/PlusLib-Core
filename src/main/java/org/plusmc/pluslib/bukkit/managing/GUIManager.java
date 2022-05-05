@@ -25,6 +25,7 @@ public class GUIManager extends BaseManager{
     //only use register if you want to use the "load" method
     @Override
     void register(Loadable loadable) {
+        loadable.load();
     }
 
     @Override
@@ -34,14 +35,18 @@ public class GUIManager extends BaseManager{
 
     @Override
     protected void init() {
-        if(isInitialized) return;
-        Bukkit.getPluginManager().registerEvents(new Listener(), getPlugin());
-        isInitialized = true;
+        registerListener(getPlugin());
     }
 
     @Override
     protected void shutdown() {
-        isInitialized = false;
+        //todo: close all open guis and unregister listeners
+    }
+
+    private static void registerListener(JavaPlugin plugin) {
+        if(isInitialized) return;
+        Bukkit.getPluginManager().registerEvents(new Listener(), plugin);
+        isInitialized = true;
     }
 
     private static class Listener implements org.bukkit.event.Listener {

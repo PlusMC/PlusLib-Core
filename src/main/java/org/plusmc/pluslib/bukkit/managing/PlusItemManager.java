@@ -32,8 +32,8 @@ public class PlusItemManager extends BaseManager {
     /**
      * The NamespacedKey of the PlusItem.
      */
-    public static NamespacedKey PLUS_ITEM_KEY = new NamespacedKey(PlusLib.getInstance(), "custom_item");
-    private static List<PlusItem> PLUS_ITEMS;
+    public static final NamespacedKey itemKey = new NamespacedKey(PlusLib.getInstance(), "custom_item");
+    private List<PlusItem> plusItems;
 
 
     protected PlusItemManager(JavaPlugin plugin) {
@@ -45,8 +45,8 @@ public class PlusItemManager extends BaseManager {
      *
      * @return The list of all PlusItems.
      */
-    public static List<PlusItem> getPlusItems() {
-        return new ArrayList<>(PLUS_ITEMS);
+    public List<PlusItem> getPlusItems() {
+        return new ArrayList<>(plusItems);
     }
 
     /**
@@ -59,9 +59,9 @@ public class PlusItemManager extends BaseManager {
     public static boolean hasCustomItem(ItemStack stack, String id) {
         if (stack == null) return false;
         if (stack.getItemMeta() == null) return false;
-        if (!stack.getItemMeta().getPersistentDataContainer().has(PLUS_ITEM_KEY, PersistentDataType.STRING))
+        if (!stack.getItemMeta().getPersistentDataContainer().has(itemKey, PersistentDataType.STRING))
             return false;
-        return Objects.equals(stack.getItemMeta().getPersistentDataContainer().get(PLUS_ITEM_KEY, PersistentDataType.STRING), id);
+        return Objects.equals(stack.getItemMeta().getPersistentDataContainer().get(itemKey, PersistentDataType.STRING), id);
     }
 
     /**
@@ -71,12 +71,12 @@ public class PlusItemManager extends BaseManager {
      * @return The plus item if the item is a plus item.
      */
     @Nullable
-    public static PlusItem getPlusItem(ItemStack stack) {
+    public PlusItem getPlusItem(ItemStack stack) {
         if (stack == null) return null;
         if (stack.getItemMeta() == null) return null;
-        if (!stack.getItemMeta().getPersistentDataContainer().has(PLUS_ITEM_KEY, PersistentDataType.STRING))
+        if (!stack.getItemMeta().getPersistentDataContainer().has(itemKey, PersistentDataType.STRING))
             return null;
-        return getPlusItem(stack.getItemMeta().getPersistentDataContainer().get(PLUS_ITEM_KEY, PersistentDataType.STRING));
+        return getPlusItem(stack.getItemMeta().getPersistentDataContainer().get(itemKey, PersistentDataType.STRING));
     }
 
     /**
@@ -86,8 +86,8 @@ public class PlusItemManager extends BaseManager {
      * @return The plus item if the ID is valid.
      */
     @Nullable
-    public static PlusItem getPlusItem(String id) {
-        for (PlusItem item : PLUS_ITEMS) {
+    public PlusItem getPlusItem(String id) {
+        for (PlusItem item : plusItems) {
             if (item.getID().equals(id))
                 return item;
         }
@@ -103,7 +103,7 @@ public class PlusItemManager extends BaseManager {
     @Override
     protected void register(Loadable item) {
         if (!(item instanceof PlusItem pItem)) return;
-        PLUS_ITEMS.add(pItem);
+        plusItems.add(pItem);
         PlusLib.logger().info("Registered PlusItem: " + pItem.getID());
     }
 
@@ -116,7 +116,7 @@ public class PlusItemManager extends BaseManager {
     @Override
     protected void unregister(Loadable item) {
         if (!(item instanceof PlusItem pItem)) return;
-        PLUS_ITEMS.remove(pItem);
+        plusItems.remove(pItem);
         item.unload();
         PlusLib.logger().info("Unregistered PlusItem: " + pItem.getID());
     }
@@ -125,17 +125,17 @@ public class PlusItemManager extends BaseManager {
     @Override
     protected void init() {
         Bukkit.getPluginManager().registerEvents(new Listener(), this.getPlugin());
-        PLUS_ITEMS = new ArrayList<>();
+        plusItems = new ArrayList<>();
     }
 
     @Override
     protected void shutdown() {
-        for (Iterator<PlusItem> iterator = PLUS_ITEMS.iterator(); iterator.hasNext(); ) {
+        for (Iterator<PlusItem> iterator = plusItems.iterator(); iterator.hasNext(); ) {
             PlusItem item = iterator.next();
             iterator.remove();
             unregister(item);
         }
-        PLUS_ITEMS.clear();
+        plusItems.clear();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class PlusItemManager extends BaseManager {
         return PlusItem.class;
     }
 
-    private static class Listener implements org.bukkit.event.Listener {
+    private class Listener implements org.bukkit.event.Listener {
 
         @EventHandler
         public void onBlockInteract(PlayerInteractEvent e) {
@@ -152,8 +152,8 @@ public class PlusItemManager extends BaseManager {
             ItemMeta meta = stack.getItemMeta();
             if (meta == null) return;
             try {
-                String id = meta.getPersistentDataContainer().get(PlusItemManager.PLUS_ITEM_KEY, PersistentDataType.STRING);
-                PlusItem item = PlusItemManager.getPlusItem(id);
+                String id = meta.getPersistentDataContainer().get(PlusItemManager.itemKey, PersistentDataType.STRING);
+                PlusItem item = getPlusItem(id);
                 if (item == null) return;
                 item.onInteractBlock(e);
             } catch (Exception ex) {
@@ -164,8 +164,8 @@ public class PlusItemManager extends BaseManager {
             if (block == null) return;
             if (!(block.getState() instanceof TileState state)) return;
             try {
-                String id = state.getPersistentDataContainer().get(PlusItemManager.PLUS_ITEM_KEY, PersistentDataType.STRING);
-                PlusItem item = PlusItemManager.getPlusItem(id);
+                String id = state.getPersistentDataContainer().get(PlusItemManager.itemKey, PersistentDataType.STRING);
+                PlusItem item = getPlusItem(id);
                 if (item == null) return;
                 item.onInteractAsBlock(e);
             } catch (Exception ex) {
@@ -179,8 +179,8 @@ public class PlusItemManager extends BaseManager {
             ItemMeta meta = stack.getItemMeta();
             if (meta == null) return;
             try {
-                String id = meta.getPersistentDataContainer().get(PlusItemManager.PLUS_ITEM_KEY, PersistentDataType.STRING);
-                PlusItem item = PlusItemManager.getPlusItem(id);
+                String id = meta.getPersistentDataContainer().get(PlusItemManager.itemKey, PersistentDataType.STRING);
+                PlusItem item = getPlusItem(id);
                 if (item == null) return;
                 item.onInteractEntity(e);
             } catch (Exception ex) {
@@ -196,8 +196,8 @@ public class PlusItemManager extends BaseManager {
             ItemMeta meta = stack.getItemMeta();
             if (meta == null) return;
             try {
-                String id = meta.getPersistentDataContainer().get(PlusItemManager.PLUS_ITEM_KEY, PersistentDataType.STRING);
-                PlusItem item = PlusItemManager.getPlusItem(id);
+                String id = meta.getPersistentDataContainer().get(PlusItemManager.itemKey, PersistentDataType.STRING);
+                PlusItem item = getPlusItem(id);
                 if (item == null) return;
                 item.onDamageEntity(e);
             } catch (Exception ex) {
@@ -211,8 +211,8 @@ public class PlusItemManager extends BaseManager {
             ItemMeta meta = stack.getItemMeta();
             if (meta == null) return;
             try {
-                String id = meta.getPersistentDataContainer().get(PlusItemManager.PLUS_ITEM_KEY, PersistentDataType.STRING);
-                PlusItem item = PlusItemManager.getPlusItem(id);
+                String id = meta.getPersistentDataContainer().get(PlusItemManager.itemKey, PersistentDataType.STRING);
+                PlusItem item = getPlusItem(id);
                 if (item == null) return;
                 item.onBlockPlace(e);
             } catch (Exception ex) {

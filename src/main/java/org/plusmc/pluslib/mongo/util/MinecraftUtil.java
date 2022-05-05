@@ -4,6 +4,12 @@ import java.util.UUID;
 
 public class MinecraftUtil {
 
+    private MinecraftUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static final String BUKKIT_ENTITY_PLAYER = "org.bukkit.entity.Player";
+
     public static boolean isBukkit() {
         try {
             Class.forName("org.bukkit.Bukkit");
@@ -42,7 +48,7 @@ public class MinecraftUtil {
     public static void sendMessage(Object player, String message) {
         try {
             if(isBukkit()) {
-                Class<?> playerClass = Class.forName("org.bukkit.entity.Player");
+                Class<?> playerClass = Class.forName(BUKKIT_ENTITY_PLAYER);
                 playerClass.getMethod("sendMessage", String.class).invoke(player, message);
             } else if(isBungee()) {
                 Class<?> playerClass = Class.forName("net.md_5.bungee.api.connection.ProxiedPlayer");
@@ -56,7 +62,7 @@ public class MinecraftUtil {
     public static void playSound(Object player, String sound, float volume, float pitch) {
         try {
             if(!isBukkit()) return;
-            Class<?> playerClass = Class.forName("org.bukkit.entity.Player");
+            Class<?> playerClass = Class.forName(BUKKIT_ENTITY_PLAYER);
             Class<?> locationClass = Class.forName("org.bukkit.Location");
             Object location = playerClass.getMethod("getLocation").invoke(player);
             playerClass.getMethod("playSound", locationClass, String.class, float.class, float.class).invoke(player, location, sound, volume, pitch);
@@ -68,7 +74,7 @@ public class MinecraftUtil {
     public static void kickPlayer(Object player, String message) {
         try {
             if(isBukkit()) {
-                Class<?> playerClass = Class.forName("org.bukkit.entity.Player");
+                Class<?> playerClass = Class.forName(BUKKIT_ENTITY_PLAYER);
                 playerClass.getMethod("kickPlayer", String.class).invoke(player, message);
             } else if (isBungee()) {
                 Class<?> playerClass = Class.forName("net.md_5.bungee.api.connection.ProxiedPlayer");

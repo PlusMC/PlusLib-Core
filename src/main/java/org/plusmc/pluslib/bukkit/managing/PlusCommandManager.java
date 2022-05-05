@@ -20,8 +20,8 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class PlusCommandManager extends BaseManager {
-    private final CommandMap COMMAND_MAP = getCommandMap();
-    private List<PlusCommand> COMMANDS = new ArrayList<>();
+    private final CommandMap commandMap = getCommandMap();
+    private List<PlusCommand> commands = new ArrayList<>();
 
     protected PlusCommandManager(JavaPlugin plugin) {
         super(plugin);
@@ -31,7 +31,6 @@ public class PlusCommandManager extends BaseManager {
         PluginCommand command = null;
         try {
             Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
-            c.setAccessible(true);
 
             command = c.newInstance(name, plugin);
         } catch (Exception e) {
@@ -42,19 +41,18 @@ public class PlusCommandManager extends BaseManager {
     }
 
     private CommandMap getCommandMap() {
-        CommandMap commandMap = null;
+        CommandMap map = null;
         try {
             if (Bukkit.getPluginManager() instanceof SimplePluginManager) {
                 Field f = SimplePluginManager.class.getDeclaredField("commandMap");
-                f.setAccessible(true);
 
-                commandMap = (CommandMap) f.get(Bukkit.getPluginManager());
+                map = (CommandMap) f.get(Bukkit.getPluginManager());
             }
         } catch (Exception e) {
             getPlugin().getLogger().severe("Failed to get CommandMap");
         }
 
-        return commandMap;
+        return map;
     }
 
     /**
@@ -66,13 +64,14 @@ public class PlusCommandManager extends BaseManager {
     protected void register(Loadable cmd) {
         if (!(cmd instanceof PlusCommand pCmd)) return;
         PluginCommand command = createCommand(pCmd.getName(), getPlugin());
+        if (command == null) throw new IllegalStateException("Failed to create command: " + pCmd.getName());
         command.setExecutor(pCmd);
         command.setTabCompleter(pCmd);
         command.setPermission(pCmd.getPermission());
         command.setUsage(pCmd.getUsage());
         command.setDescription(pCmd.getDescription());
-        COMMAND_MAP.register(getPlugin().getName(), command);
-        COMMANDS.add(pCmd);
+        commandMap.register(getPlugin().getName(), command);
+        commands.add(pCmd);
         getPlugin().getLogger().info("Registered command: " + pCmd.getName());
     }
 
@@ -84,20 +83,19 @@ public class PlusCommandManager extends BaseManager {
     @Override
     protected void unregister(Loadable cmd) {
         if (!(cmd instanceof PlusCommand pCmd)) return;
-        CommandMap COMMAND_MAP = getCommandMap();
         PluginCommand command = getPlugin().getCommand(pCmd.getName());
         if (command == null) {
             getPlugin().getLogger().warning("Failed to unregister command: " + pCmd.getName());
             return;
         }
-        command.unregister(COMMAND_MAP);
+        command.unregister(commandMap);
         pCmd.unload();
         getPlugin().getLogger().info("Unregistered command: " + pCmd.getName());
     }
 
     @Override
     protected void init() {
-        COMMANDS = new ArrayList<>();
+        commands = new ArrayList<>();
     }
 
     @Override
@@ -108,6 +106,6 @@ public class PlusCommandManager extends BaseManager {
 
     @Override
     protected void shutdown() {
-        COMMANDS.forEach(this::unregister);
+        commands.forEach(this::unregister);
     }
 }

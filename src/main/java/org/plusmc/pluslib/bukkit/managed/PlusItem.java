@@ -93,7 +93,7 @@ public interface PlusItem extends Loadable {
         assert meta != null;
         meta.setDisplayName(this.getName());
         meta.setLore(Arrays.asList(this.getLore()));
-        meta.getPersistentDataContainer().set(PlusItemManager.PLUS_ITEM_KEY, PersistentDataType.STRING, this.getID());
+        meta.getPersistentDataContainer().set(PlusItemManager.itemKey, PersistentDataType.STRING, this.getID());
         stack.setItemMeta(meta);
         return stack;
     }

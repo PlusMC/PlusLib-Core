@@ -10,6 +10,7 @@ import org.plusmc.pluslib.bukkit.managed.PaginatedGUI;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class PageTestGUI extends PaginatedGUI {
 
@@ -25,12 +26,12 @@ public class PageTestGUI extends PaginatedGUI {
         ItemStack item = new ItemBuilder(Material.ARROW).setName("Back").build();
         ItemStack item2 = new ItemBuilder(Material.ARROW).setName("Next").build();
 
-        GUIElement back = new GUIElement(item, (event) -> {
+        GUIElement back = new GUIElement(item, event -> {
             if(getPage() - 1 < 0) return;
             setPage(getPage() - 1, true);
         });
 
-        GUIElement next = new GUIElement(item2, (event) -> {
+        GUIElement next = new GUIElement(item2, event -> {
             if(getPage() + 1 > getPageAmount()) return;
             setPage(getPage() + 1, true);
         });
@@ -38,7 +39,7 @@ public class PageTestGUI extends PaginatedGUI {
         for(int i = 0; i < 10; i++) {
             Map<Integer, GUIElement> elements = new HashMap<>();
             for (int k = 0; k < 54; k++)
-                elements.put(k,new GUIElement(new ItemBuilder(true).build(), null));
+                elements.put(k,new GUIElement(new ItemBuilder(new Random()).build(), null));
 
             elements.put(45, back);
             elements.put(53, next);

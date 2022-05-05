@@ -14,9 +14,11 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class TickingManager extends BaseManager {
-    private List<Tickable> Tickables;
-    private BukkitTask TickingTask, AsyncTickingTask;
-    private long TICK, ASYNC_TICK;
+    private List<Tickable> tickables;
+    private BukkitTask tickingTask;
+    private BukkitTask asyncTickingTask;
+    private long tick;
+    private long asyncTick;
     private int errorCount;
 
     protected TickingManager(JavaPlugin plugin) {
@@ -24,23 +26,23 @@ public class TickingManager extends BaseManager {
     }
 
     private void tick() {
-        for (Tickable tickable : Tickables) {
+        for (Tickable tickable : tickables) {
             if (!(tickable.isRunning() && !tickable.isAsync())) continue;
             try {
-                tickable.tick(TICK);
+                tickable.tick(tick);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        TICK++;
+        tick++;
     }
 
     private void asyncTick() {
-        for (Tickable tickable : Tickables) {
+        for (Tickable tickable : tickables) {
             if (!(tickable.isRunning() && tickable.isAsync())) continue;
             try {
-                tickable.tick(ASYNC_TICK);
+                tickable.tick(asyncTick);
             } catch (Exception e) {
                 errorCount++;
                 if (errorCount > 5) {
@@ -50,7 +52,7 @@ public class TickingManager extends BaseManager {
                 }
             }
         }
-        ASYNC_TICK++;
+        asyncTick++;
     }
 
     @Override
@@ -61,32 +63,32 @@ public class TickingManager extends BaseManager {
     @Override
     protected void register(Loadable loadable) {
         if (!(loadable instanceof Tickable tickable)) return;
-        Tickables.add(tickable);
+        tickables.add(tickable);
         getPlugin().getLogger().info("Registered " + tickable.getClass().getSimpleName() + " to the ticking manager.");
     }
 
     @Override
     protected void unregister(Loadable loadable) {
         if (!(loadable instanceof Tickable tickable)) return;
-        Tickables.remove(tickable);
+        tickables.remove(tickable);
         tickable.unload();
         getPlugin().getLogger().info("Unregistered " + tickable.getClass().getSimpleName() + " from the ticking manager.");
     }
 
     @Override
     protected void init() {
-        TICK = 0;
-        ASYNC_TICK = 0;
+        tick = 0;
+        asyncTick = 0;
         errorCount = 0;
-        Tickables = new ArrayList<>();
-        TickingTask = Bukkit.getScheduler().runTaskTimer(getPlugin(), this::tick, 0L, 1L);
-        AsyncTickingTask = Bukkit.getScheduler().runTaskTimerAsynchronously(getPlugin(), this::asyncTick, 0L, 1L);
+        tickables = new ArrayList<>();
+        tickingTask = Bukkit.getScheduler().runTaskTimer(getPlugin(), this::tick, 0L, 1L);
+        asyncTickingTask = Bukkit.getScheduler().runTaskTimerAsynchronously(getPlugin(), this::asyncTick, 0L, 1L);
     }
 
     @Override
     protected void shutdown() {
-        TickingTask.cancel();
-        AsyncTickingTask.cancel();
-        Tickables.clear();
+        tickingTask.cancel();
+        asyncTickingTask.cancel();
+        tickables.clear();
     }
 }

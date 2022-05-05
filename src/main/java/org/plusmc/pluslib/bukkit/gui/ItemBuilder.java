@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class ItemBuilder {
 
@@ -20,8 +21,8 @@ public class ItemBuilder {
         this.meta = this.item.getItemMeta();
     }
 
-    public ItemBuilder(boolean random) {
-        Material material = Material.values()[(int) (Math.random() * Material.values().length)];
+    public ItemBuilder(Random random) {
+        Material material = Material.values()[random.nextInt(Material.values().length)];
         this.item = new ItemStack(material);
         this.meta = this.item.getItemMeta();
     }

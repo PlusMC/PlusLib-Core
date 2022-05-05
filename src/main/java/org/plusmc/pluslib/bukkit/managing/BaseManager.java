@@ -17,10 +17,15 @@ public abstract class BaseManager {
     private static final List<BaseManager> MANAGERS = new ArrayList<>();
 
     private final JavaPlugin plugin;
+
     protected BaseManager(JavaPlugin plugin) {
         this.plugin = plugin;
         MANAGERS.add(this);
     }
+
+    protected abstract void init();
+
+    protected abstract void shutdown();
 
     @Nullable
     public static <T extends BaseManager> T createManager(Class<T> manager, JavaPlugin plugin) {
@@ -30,7 +35,6 @@ public abstract class BaseManager {
 
         try {
             Constructor<T> constructor = manager.getDeclaredConstructor(JavaPlugin.class);
-            constructor.setAccessible(true);
             obj = constructor.newInstance(plugin);
             obj.init();
         } catch (Exception e) {
@@ -94,8 +98,4 @@ public abstract class BaseManager {
     JavaPlugin getPlugin() {
         return plugin;
     }
-
-    abstract protected void init();
-
-    abstract protected void shutdown();
 }

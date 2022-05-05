@@ -8,22 +8,21 @@ import java.util.Map;
 @Embedded
 public class UserMH {
     private Map<String, Long> personalBests;
-    private int totalKills, totalDeaths;
-    private int totalWins, winsAsRunner, winsAsHunter;
-    private int totalLosses, lossAsRunner, lossAsHunter;
+    private int totalKills;
+    private int totalDeaths;
+    private int totalWins;
+    private int winsAsRunner;
+    private int winsAsHunter;
+    private int totalLosses;
+    private int lossAsRunner;
+    private int lossAsHunter;
     private int totalGames;
-
-    public UserMH() {
-    }
 
     public void addPersonalBest(String key, long value) {
         if (personalBests == null)
             personalBests = new HashMap<>();
 
-        if(!personalBests.containsKey(key)) {
-            personalBests.put(key, value);
-            return;
-        }
+        personalBests.computeIfAbsent(key, k -> personalBests.put(k, value));
 
         personalBests.put(key, Math.max(value, personalBests.get(key)));
     }

@@ -19,6 +19,10 @@ import java.util.logging.Logger;
 @SuppressWarnings("unused")
 public final class PlusLib extends JavaPlugin {
 
+    public static final String BUNGEE_CORD = "BungeeCord";
+    public static final String
+            PLUSMC_BUNGEE = "plusmc:bungee";
+
     /**
      * Gets the instance of the plugin.
      * Do not use this method, it's only for internal use.
@@ -42,21 +46,21 @@ public final class PlusLib extends JavaPlugin {
     @Override
     public void onEnable() {
         BungeeUtil util = new BungeeUtil();
-        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "plusmc:bungee");
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, BUNGEE_CORD);
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, PLUSMC_BUNGEE);
 
-        Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", util);
-        Bukkit.getMessenger().registerIncomingPluginChannel(this, "plusmc:bungee", util);
+        Bukkit.getMessenger().registerIncomingPluginChannel(this, BUNGEE_CORD, util);
+        Bukkit.getMessenger().registerIncomingPluginChannel(this, PLUSMC_BUNGEE, util);
         Bukkit.getPluginManager().registerEvents(new BukkitUtil.Listener(), this);
     }
 
     @Override
     public void onDisable() {
-        Bukkit.getMessenger().unregisterIncomingPluginChannel(this, "BungeeCord");
-        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, "BungeeCord");
+        Bukkit.getMessenger().unregisterIncomingPluginChannel(this, BUNGEE_CORD);
+        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, BUNGEE_CORD);
 
-        Bukkit.getMessenger().unregisterIncomingPluginChannel(this, "plusmc:bungee");
-        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, "plusmc:bungee");
+        Bukkit.getMessenger().unregisterIncomingPluginChannel(this, PLUSMC_BUNGEE);
+        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, PLUSMC_BUNGEE);
     }
 
 }

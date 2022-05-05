@@ -11,25 +11,25 @@ import org.plusmc.pluslib.bukkit.PlusLib;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.logging.Level;
 
 /**
  * A utility class for BungeeCord.
  */
 @SuppressWarnings("unused")
 public class BungeeUtil implements PluginMessageListener {
-    private static HashMap<String, ServerInfo> SERVER_INFO = new HashMap<>();
-    private static HashMap<String, PlayerList> PLAYER_LIST = new HashMap<>();
+    public static final String BUNGEE_CORD = "BungeeCord";
+    private static HashMap<String, ServerInfo> serverInfo = new HashMap<>();
+    private static HashMap<String, PlayerList> playerList = new HashMap<>();
     private static boolean isPlusMC = false;
 
     /**
      * Creates a new BungeeUtil.
      * Do not use this constructor as it is only for internal use.
      */
-    public BungeeUtil() {
-        SERVER_INFO = new HashMap<>();
-        PLAYER_LIST = new HashMap<>();
-    }
 
     public static boolean isPlusMC() {
         return isPlusMC;
@@ -46,7 +46,7 @@ public class BungeeUtil implements PluginMessageListener {
         out.writeUTF("Connect");
         out.writeUTF(server);
 
-        player.sendPluginMessage(PlusLib.getInstance(), "BungeeCord", out.toByteArray());
+        player.sendPluginMessage(PlusLib.getInstance(), BUNGEE_CORD, out.toByteArray());
     }
 
     /**
@@ -61,7 +61,7 @@ public class BungeeUtil implements PluginMessageListener {
         out.writeUTF(name);
         out.writeUTF(server);
 
-        PlusLib.getInstance().getServer().sendPluginMessage(PlusLib.getInstance(), "BungeeCord", out.toByteArray());
+        PlusLib.getInstance().getServer().sendPluginMessage(PlusLib.getInstance(), BUNGEE_CORD, out.toByteArray());
     }
 
     /**
@@ -73,12 +73,12 @@ public class BungeeUtil implements PluginMessageListener {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("PlayerList");
         out.writeUTF(server);
-        PlusLib.getInstance().getServer().sendPluginMessage(PlusLib.getInstance(), "BungeeCord", out.toByteArray());
+        PlusLib.getInstance().getServer().sendPluginMessage(PlusLib.getInstance(), BUNGEE_CORD, out.toByteArray());
 
         out = ByteStreams.newDataOutput();
         out.writeUTF("ServerIP");
         out.writeUTF(server);
-        PlusLib.getInstance().getServer().sendPluginMessage(PlusLib.getInstance(), "BungeeCord", out.toByteArray());
+        PlusLib.getInstance().getServer().sendPluginMessage(PlusLib.getInstance(), BUNGEE_CORD, out.toByteArray());
     }
 
     public static void checkPlusMC() {
@@ -93,7 +93,7 @@ public class BungeeUtil implements PluginMessageListener {
      * @return {@link ServerInfo} of the server
      */
     public static ServerInfo getInfo(String server) {
-        return SERVER_INFO.getOrDefault(server, new ServerInfo(server, "", 0, false));
+        return serverInfo.getOrDefault(server, new ServerInfo(server, "", 0, false));
     }
 
     /**
@@ -103,26 +103,27 @@ public class BungeeUtil implements PluginMessageListener {
      * @return {@link PlayerList} of the server
      */
     public static PlayerList getPlayerList(String server) {
-        return PLAYER_LIST.getOrDefault(server, new PlayerList(server, new String[]{}, 0));
+        return playerList.getOrDefault(server, new PlayerList(server, new String[]{}, 0));
     }
 
     public void onPluginMessageReceived(String channel, @NotNull Player player, byte[] message) {
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
-        if (!channel.equals("BungeeCord") && !channel.equals("plusmc:bungee")) return;
+        if (!channel.equals(BUNGEE_CORD) && !channel.equals("plusmc:bungee")) return;
         String subchannel = in.readUTF();
         switch (subchannel) {
             case "PlayerList" -> handlePlayerList(in);
             case "ServerIP" -> handleServerIP(in);
             case "CheckPlusMC" -> handleCheckPlusMC();
+            default -> PlusLib.logger().log(Level.WARNING, "Unknown subchannel: {0}", subchannel);
         }
     }
 
     private void handlePlayerList(ByteArrayDataInput in) {
         try {
             String server = in.readUTF();
-            String[] playerList = in.readUTF().split(", ");
-            playerList = playerList.length == 1 && playerList[0].equals("") ? new String[0] : playerList;
-            PLAYER_LIST.put(server, new PlayerList(server, playerList, playerList.length));
+            String[] players = in.readUTF().split(", ");
+            players = players.length == 1 && players[0].equals("") ? new String[0] : players;
+            BungeeUtil.playerList.put(server, new PlayerList(server, players, players.length));
         } catch (Exception e) {
             //ignore
         }
@@ -136,10 +137,10 @@ public class BungeeUtil implements PluginMessageListener {
                 socket.connect(address, 500);
                 socket.close();
                 ServerInfo info1 = new ServerInfo(info.server(), info.ip(), info.port(), true);
-                SERVER_INFO.put(info.server(), info1);
+                serverInfo.put(info.server(), info1);
             } catch (Exception e) {
                 ServerInfo info1 = new ServerInfo(info.server(), info.ip(), info.port(), false);
-                SERVER_INFO.put(info.server(), info1);
+                serverInfo.put(info.server(), info1);
             }
         });
     }
@@ -149,15 +150,15 @@ public class BungeeUtil implements PluginMessageListener {
             String server = in.readUTF();
             String ip = in.readUTF();
             int port = in.readUnsignedShort();
-            SERVER_INFO.put(server, new ServerInfo(server, ip, port, false));
-            updateOnline(SERVER_INFO.get(server));
+            serverInfo.put(server, new ServerInfo(server, ip, port, false));
+            updateOnline(serverInfo.get(server));
         } catch (Exception e) {
             //ignore
         }
     }
 
 
-    private void handleCheckPlusMC() {
+    private static void handleCheckPlusMC() {
         PlusLib.getInstance().getLogger().info("Using PlusMC Bungee!");
         isPlusMC = true;
     }
@@ -174,5 +175,22 @@ public class BungeeUtil implements PluginMessageListener {
      * PlayerList stores the server name, player list, and the amount of players
      */
     public record PlayerList(String server, String[] playerList, int playerCount) {
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            PlayerList that = (PlayerList) o;
+            return server.equals(that.server);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(server);
+        }
+
+        @Override
+        public String toString() {
+            return server + ": " + Arrays.toString(playerList);
+        }
     }
 }

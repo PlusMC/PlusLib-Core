@@ -18,12 +18,15 @@ public class User {
     @Indexed
     private String discordName;
 
-    private long browniePoints, totalPoints, totalSpent;
+    private long browniePoints;
+    private long totalPoints;
+    private long totalSpent;
 
     private long pointsForNextLevel;
     private int level;
 
-    private long firstLogin, lastLogin;
+    private long firstLogin;
+    private long lastLogin;
 
     private String banReason = null;
     private long banTime = 0;

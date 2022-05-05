@@ -2,11 +2,11 @@ package org.plusmc.pluslib.bukkit.test;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.plusmc.pluslib.bukkit.managed.PlusCommand;
 import org.plusmc.pluslib.bukkit.util.BungeeUtil;
 
+import java.util.Collections;
 import java.util.List;
 
 public class GUITest implements PlusCommand {
@@ -33,7 +33,7 @@ public class GUITest implements PlusCommand {
 
     @Override
     public List<String> getCompletions(int index) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

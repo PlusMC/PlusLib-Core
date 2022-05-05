@@ -10,7 +10,7 @@ public abstract class PaginatedGUI extends PlusGUI {
     private final Map<Integer, Map<Integer, GUIElement>> pages;
 
 
-    public PaginatedGUI() {
+    protected PaginatedGUI() {
         super();
         this.pages = new HashMap<>();
         createPages();
@@ -53,8 +53,8 @@ public abstract class PaginatedGUI extends PlusGUI {
         setElements(pages.getOrDefault(page, new HashMap<>()));
     }
 
-    protected void getPage(final int page) {
-        this.pages.get(page);
+    protected Map<Integer, GUIElement> getPage(final int page) {
+        return this.pages.get(page);
     }
 
     protected void removePage(final int page) {

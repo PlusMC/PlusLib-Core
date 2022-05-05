@@ -12,7 +12,7 @@ public abstract class PlusGUI implements Loadable, InventoryHolder {
     private final Map<Integer, GUIElement> elements;
     private final Inventory inventory;
 
-    public PlusGUI() {
+    protected PlusGUI() {
         this.elements = new HashMap<>();
         this.inventory = this.createInventory();
         draw();

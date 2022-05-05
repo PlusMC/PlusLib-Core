@@ -15,8 +15,12 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class BukkitUtil {
-    private final static HashMap<Player, Long> JOIN_TIMES = new HashMap<>();
+    private static final HashMap<Player, Long> JOIN_TIMES = new HashMap<>();
 
+
+    private BukkitUtil() {
+        throw new IllegalStateException("Utility class");
+    }
     /**
      * Get a list of online player's names
      *
