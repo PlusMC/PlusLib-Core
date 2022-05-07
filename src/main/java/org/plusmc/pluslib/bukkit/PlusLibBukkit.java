@@ -2,9 +2,6 @@ package org.plusmc.pluslib.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.plusmc.pluslib.bukkit.managing.BaseManager;
-import org.plusmc.pluslib.bukkit.managing.PlusCommandManager;
-import org.plusmc.pluslib.bukkit.test.GUITest;
 import org.plusmc.pluslib.bukkit.util.BukkitUtil;
 import org.plusmc.pluslib.bukkit.util.BungeeUtil;
 
@@ -17,11 +14,11 @@ import java.util.logging.Logger;
  * Don't use this class if you are
  */
 @SuppressWarnings("unused")
-public final class PlusLib extends JavaPlugin {
+public final class PlusLibBukkit extends JavaPlugin {
 
     public static final String BUNGEE_CORD = "BungeeCord";
-    public static final String
-            PLUSMC_BUNGEE = "plusmc:bungee";
+    public static final String PLUSMC_BUNGEE = "plusmc:bungee";
+
 
     /**
      * Gets the instance of the plugin.
@@ -29,8 +26,8 @@ public final class PlusLib extends JavaPlugin {
      *
      * @return The instance of the plugin
      */
-    public static PlusLib getInstance() {
-        return JavaPlugin.getPlugin(PlusLib.class);
+    public static PlusLibBukkit getInstance() {
+        return JavaPlugin.getPlugin(PlusLibBukkit.class);
     }
 
     /**
@@ -40,7 +37,7 @@ public final class PlusLib extends JavaPlugin {
      * @return The {@link Logger} of the plugin
      */
     public static Logger logger() {
-        return PlusLib.getInstance().getLogger();
+        return PlusLibBukkit.getInstance().getLogger();
     }
 
     @Override

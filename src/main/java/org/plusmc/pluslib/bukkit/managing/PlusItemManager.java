@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
-import org.plusmc.pluslib.bukkit.PlusLib;
+import org.plusmc.pluslib.bukkit.PlusLibBukkit;
 import org.plusmc.pluslib.bukkit.managed.Loadable;
 import org.plusmc.pluslib.bukkit.managed.PlusItem;
 
@@ -32,7 +32,7 @@ public class PlusItemManager extends BaseManager {
     /**
      * The NamespacedKey of the PlusItem.
      */
-    public static final NamespacedKey itemKey = new NamespacedKey(PlusLib.getInstance(), "custom_item");
+    public static final NamespacedKey itemKey = new NamespacedKey(PlusLibBukkit.getInstance(), "custom_item");
     private List<PlusItem> plusItems;
 
 
@@ -104,7 +104,7 @@ public class PlusItemManager extends BaseManager {
     protected void register(Loadable item) {
         if (!(item instanceof PlusItem pItem)) return;
         plusItems.add(pItem);
-        PlusLib.logger().info("Registered PlusItem: " + pItem.getID());
+        PlusLibBukkit.logger().info("Registered PlusItem: " + pItem.getID());
     }
 
     /**
@@ -118,7 +118,7 @@ public class PlusItemManager extends BaseManager {
         if (!(item instanceof PlusItem pItem)) return;
         plusItems.remove(pItem);
         item.unload();
-        PlusLib.logger().info("Unregistered PlusItem: " + pItem.getID());
+        PlusLibBukkit.logger().info("Unregistered PlusItem: " + pItem.getID());
     }
 
 

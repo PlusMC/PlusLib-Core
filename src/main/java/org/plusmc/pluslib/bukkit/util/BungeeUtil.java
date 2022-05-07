@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
-import org.plusmc.pluslib.bukkit.PlusLib;
+import org.plusmc.pluslib.bukkit.PlusLibBukkit;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -46,7 +46,7 @@ public class BungeeUtil implements PluginMessageListener {
         out.writeUTF("Connect");
         out.writeUTF(server);
 
-        player.sendPluginMessage(PlusLib.getInstance(), BUNGEE_CORD, out.toByteArray());
+        player.sendPluginMessage(PlusLibBukkit.getInstance(), BUNGEE_CORD, out.toByteArray());
     }
 
     /**
@@ -61,7 +61,7 @@ public class BungeeUtil implements PluginMessageListener {
         out.writeUTF(name);
         out.writeUTF(server);
 
-        PlusLib.getInstance().getServer().sendPluginMessage(PlusLib.getInstance(), BUNGEE_CORD, out.toByteArray());
+        PlusLibBukkit.getInstance().getServer().sendPluginMessage(PlusLibBukkit.getInstance(), BUNGEE_CORD, out.toByteArray());
     }
 
     /**
@@ -73,17 +73,17 @@ public class BungeeUtil implements PluginMessageListener {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("PlayerList");
         out.writeUTF(server);
-        PlusLib.getInstance().getServer().sendPluginMessage(PlusLib.getInstance(), BUNGEE_CORD, out.toByteArray());
+        PlusLibBukkit.getInstance().getServer().sendPluginMessage(PlusLibBukkit.getInstance(), BUNGEE_CORD, out.toByteArray());
 
         out = ByteStreams.newDataOutput();
         out.writeUTF("ServerIP");
         out.writeUTF(server);
-        PlusLib.getInstance().getServer().sendPluginMessage(PlusLib.getInstance(), BUNGEE_CORD, out.toByteArray());
+        PlusLibBukkit.getInstance().getServer().sendPluginMessage(PlusLibBukkit.getInstance(), BUNGEE_CORD, out.toByteArray());
     }
 
     public static void checkPlusMC() {
-        PlusLib.logger().info("Checking if PlusMCBungee is running...");
-        PlusLib.getInstance().getServer().sendPluginMessage(PlusLib.getInstance(), "plusmc:bungee", "CheckPlusMC".getBytes());
+        PlusLibBukkit.logger().info("Checking if PlusMCBungee is running...");
+        PlusLibBukkit.getInstance().getServer().sendPluginMessage(PlusLibBukkit.getInstance(), "plusmc:bungee", "CheckPlusMC".getBytes());
     }
 
     /**
@@ -114,7 +114,7 @@ public class BungeeUtil implements PluginMessageListener {
             case "PlayerList" -> handlePlayerList(in);
             case "ServerIP" -> handleServerIP(in);
             case "CheckPlusMC" -> handleCheckPlusMC();
-            default -> PlusLib.logger().log(Level.WARNING, "Unknown subchannel: {0}", subchannel);
+            default -> PlusLibBukkit.logger().log(Level.WARNING, "Unknown subchannel: {0}", subchannel);
         }
     }
 
@@ -130,7 +130,7 @@ public class BungeeUtil implements PluginMessageListener {
     }
 
     private void updateOnline(ServerInfo info) {
-        Bukkit.getScheduler().runTaskAsynchronously(PlusLib.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(PlusLibBukkit.getInstance(), () -> {
             InetSocketAddress address = new InetSocketAddress(info.ip(), info.port());
             Socket socket = new Socket();
             try {
@@ -159,7 +159,7 @@ public class BungeeUtil implements PluginMessageListener {
 
 
     private static void handleCheckPlusMC() {
-        PlusLib.getInstance().getLogger().info("Using PlusMC Bungee!");
+        PlusLibBukkit.getInstance().getLogger().info("Using PlusMC Bungee!");
         isPlusMC = true;
     }
 

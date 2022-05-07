@@ -1,4 +1,4 @@
-name: PlusLibBungee
+name: PlusLib
 version: '${project.version}'
 main: org.plusmc.pluslib.bungee.PlusLibBungee
 author: OakleyCord

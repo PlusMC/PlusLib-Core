@@ -8,15 +8,34 @@ import java.util.Map;
 @Embedded
 public class UserMH {
     private Map<String, Long> personalBests;
-    private int totalKills;
-    private int totalDeaths;
-    private int totalWins;
+
+
     private int winsAsRunner;
-    private int winsAsHunter;
-    private int totalLosses;
     private int lossAsRunner;
+    private int killsAsRunner;
+    private int deathsAsRunner;
+
+
+    private int winsAsHunter;
     private int lossAsHunter;
-    private int totalGames;
+    private int killsAsHunter;
+    private int deathsAsHunter;
+
+    public int getKillsAsRunner() {
+        return killsAsRunner;
+    }
+
+    public int getDeathsAsRunner() {
+        return deathsAsRunner;
+    }
+
+    public int getKillsAsHunter() {
+        return killsAsHunter;
+    }
+
+    public int getDeathsAsHunter() {
+        return deathsAsHunter;
+    }
 
     public void addPersonalBest(String key, long value) {
         if (personalBests == null)
@@ -33,48 +52,48 @@ public class UserMH {
         }
     }
 
-    public void addKill() {
-        totalKills++;
+    public void addKillRunner() {
+        killsAsRunner++;
     }
 
-    public void addDeath() {
-        totalDeaths++;
+    public void addDeathRunner() {
+        deathsAsRunner++;
+    }
+
+    public void addKillHunter() {
+        killsAsHunter++;
+    }
+
+    public void addDeathHunter() {
+        deathsAsHunter++;
     }
 
     public void addWinRunner() {
         winsAsRunner++;
-        totalWins++;
     }
 
     public void addWinHunter() {
         winsAsHunter++;
-        totalWins++;
     }
 
     public void addLossRunner() {
         lossAsRunner++;
-        totalLosses++;
     }
 
     public void addLossHunter() {
         lossAsHunter++;
-        totalLosses++;
-    }
-
-    public void addGame() {
-        totalGames++;
     }
 
     public int getTotalKills() {
-        return totalKills;
+        return killsAsHunter + killsAsRunner;
     }
 
     public int getTotalDeaths() {
-        return totalDeaths;
+        return deathsAsHunter + deathsAsRunner;
     }
 
     public int getTotalWins() {
-        return totalWins;
+        return winsAsRunner + winsAsHunter;
     }
 
     public int getWinsAsRunner() {
@@ -86,7 +105,7 @@ public class UserMH {
     }
 
     public int getTotalLosses() {
-        return totalLosses;
+        return lossAsRunner + lossAsHunter;
     }
 
     public int getLossAsRunner() {
@@ -98,7 +117,7 @@ public class UserMH {
     }
 
     public int getTotalGames() {
-        return totalGames;
+        return winsAsHunter + winsAsRunner + lossAsHunter + lossAsRunner;
     }
 
     public Map<String, Long> getPersonalBests() {

@@ -35,6 +35,7 @@ public abstract class BaseManager {
 
         try {
             Constructor<T> constructor = manager.getDeclaredConstructor(JavaPlugin.class);
+            constructor.setAccessible(true);
             obj = constructor.newInstance(plugin);
             obj.init();
         } catch (Exception e) {

@@ -31,7 +31,7 @@ public class PlusCommandManager extends BaseManager {
         PluginCommand command = null;
         try {
             Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
-
+            c.setAccessible(true);
             command = c.newInstance(name, plugin);
         } catch (Exception e) {
             getPlugin().getLogger().severe("Failed to create PluginCommand");
@@ -45,11 +45,11 @@ public class PlusCommandManager extends BaseManager {
         try {
             if (Bukkit.getPluginManager() instanceof SimplePluginManager) {
                 Field f = SimplePluginManager.class.getDeclaredField("commandMap");
-
+                f.setAccessible(true);
                 map = (CommandMap) f.get(Bukkit.getPluginManager());
             }
         } catch (Exception e) {
-            getPlugin().getLogger().severe("Failed to get CommandMap");
+            e.printStackTrace();
         }
 
         return map;

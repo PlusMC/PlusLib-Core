@@ -1,47 +1,144 @@
 package org.plusmc.pluslib.mongo;
 
 import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
+import com.mongodb.MongoClientOptions;
+import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+import org.plusmc.pluslib.mongo.util.MinecraftReflection;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 public class DatabaseHandler {
-    private final MongoClient client;
-    private final Morphia morphia;
+    @Nullable
+    private static DatabaseHandler instance;
+    private MongoClient client;
+    private Morphia morphia;
+    private List<User> cachedUsers;
     private UserDAO userDAO;
 
-    public DatabaseHandler() {
-        client = new MongoClient(new ServerAddress("localhost", 27017));
-        morphia = new Morphia();
-        loadDataStore();
+    private DatabaseHandler() {
+        MinecraftReflection.runAsync(() -> {
+            try {
+                client = new MongoClient("localhost", MongoClientOptions.builder().serverSelectionTimeout(5000).build());
+                morphia = new Morphia();
+                loadDataStore();
+                if(MinecraftReflection.getLogger() != null)
+                    MinecraftReflection.getLogger().info("Connected to MongoDB");
+            } catch (Exception e) {
+                if (MinecraftReflection.getLogger() != null)
+                    MinecraftReflection.getLogger().warning("Failed to connect to database!");
+                e.printStackTrace();
+                client.close();
+                client = null;
+                morphia = null;
+                userDAO = null;
+            }
+        });
     }
 
     private void loadDataStore() {
+        if(morphia == null) return;
         morphia.map(User.class);
 
-        Datastore datastore = morphia.createDatastore(client, "DEV_PlusMCDB");
+        Datastore datastore = morphia.createDatastore(client, "DEV_PlusMC_DB");
         datastore.ensureIndexes();
 
         userDAO = new UserDAO(User.class, datastore);
     }
 
-    public void shutdown() {
-        client.close();
+    public boolean isLoaded() {
+        return client != null && morphia != null && userDAO != null;
     }
 
-    public User getUser(String uuid) {
-        return userDAO.findOne("uuid", uuid);
+    public static void createInstance() {
+        if (instance == null)
+            instance = new DatabaseHandler();
+
     }
 
-    public void saveUser(User user) {
+    public static @Nullable DatabaseHandler getInstance() {
+        return instance;
+    }
+
+    public void updateCache() {
+        MinecraftReflection.runAsync(() ->
+                cachedUsers = userDAO.find().asList()
+        );
+    }
+
+
+    /**
+     * Asynchronously executes the given action on the user with the given UUID.
+     * Saves the user if the action modifies it.
+     *
+     * @param uuid   UUID of the user to execute the action on
+     * @param action action to execute
+     */
+    public void asyncUserAction(UUID uuid, Consumer<User> action) {
+        if (!isLoaded())
+            return;
+        MinecraftReflection.runAsync(() -> {
+            User user = getUser(uuid);
+            if (user != null)
+                action.accept(user);
+            saveUser(user);
+        });
+    }
+
+    private User getUser(UUID uuid) {
+        if (!isLoaded())
+            return null;
+        return userDAO.findOne("uuid", uuid.toString());
+    }
+
+    private void saveUser(User user) {
+        if (!isLoaded())
+            return;
         userDAO.save(user);
     }
 
-    public List<User> getAllUsers() {
-        return userDAO.find().asList();
+    /**
+     * Gets the user cache.
+     * The cache is updated every 30 seconds, so it may be out of date.
+     * Do not update any user objects in the cache, it will not be saved.
+     *
+     * @return a list of all users in the cache.
+     */
+    public List<User> getUserCache() {
+        if (!isLoaded())
+            return Collections.emptyList();
+        return Collections.unmodifiableList(cachedUsers);
     }
 
+    /**
+     * Gets the user with the given UUID from the cache.
+     * The cache is updated every 30 seconds, so it may be out of date.
+     * Do not update any user objects in the cache, it will not be saved.
+     *
+     * @param uuid UUID of the user to get from the cache.
+     * @return user if found, null if not.
+     */
+    @Nullable
+    public User getUserFromCache(UUID uuid) {
+        if (!isLoaded())
+            return null;
+        for (User user : cachedUsers) {
+            if (user.getUUID().equals(uuid)) {
+                return user;
+            }
+        }
+        return null;
+    }
 
+    public User getUserSync(UUID uuid) {
+        return getUser(uuid);
+    }
+
+    public void saveUserSync(User user) {
+        saveUser(user);
+    }
 }

@@ -4,8 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.plusmc.pluslib.bukkit.PlusLib;
+import org.plusmc.pluslib.bukkit.PlusLibBukkit;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +55,7 @@ public class BukkitUtil {
             Player player = event.getPlayer();
             JOIN_TIMES.put(player, System.currentTimeMillis());
             if(isFirst) {
-                Bukkit.getScheduler().runTask(PlusLib.getInstance(), BungeeUtil::checkPlusMC);
+                Bukkit.getScheduler().runTask(PlusLibBukkit.getInstance(), BungeeUtil::checkPlusMC);
                 isFirst = false;
             }
         }

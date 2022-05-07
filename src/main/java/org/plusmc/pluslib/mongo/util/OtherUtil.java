@@ -3,7 +3,7 @@ package org.plusmc.pluslib.mongo.util;
 public class OtherUtil {
 
     private OtherUtil() {
-        throw new IllegalAccessError("Utility class");
+        throw new IllegalStateException("Utility class");
     }
 
 
