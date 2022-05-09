@@ -28,8 +28,6 @@ public class BoardHandler implements Tickable {
 
     @Override
     public void tick(long tick) {
-        if(tick % 5 != 0)
-            return;
         for (PlusBoard board : boards) {
             if (board.isRunning())
                 board.tick(tick);
