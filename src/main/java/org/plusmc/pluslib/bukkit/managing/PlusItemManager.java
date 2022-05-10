@@ -155,7 +155,7 @@ public class PlusItemManager extends BaseManager {
                 String id = meta.getPersistentDataContainer().get(PlusItemManager.itemKey, PersistentDataType.STRING);
                 PlusItem item = getPlusItem(id);
                 if (item == null) return;
-                item.onInteractBlock(e);
+                item.onInteract(e);
             } catch (Exception ex) {
                 //ignore
             }
@@ -175,7 +175,7 @@ public class PlusItemManager extends BaseManager {
 
         @EventHandler
         public void onEntityInteract(PlayerInteractEntityEvent e) {
-            ItemStack stack = e.getPlayer().getInventory().getItemInMainHand();
+            ItemStack stack = e.getPlayer().getInventory().getItem(e.getHand());
             ItemMeta meta = stack.getItemMeta();
             if (meta == null) return;
             try {

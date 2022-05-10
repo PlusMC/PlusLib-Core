@@ -11,7 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// a scoreboard that is used to display information to players
+/**
+ * A scoreboard that is used to display information to players
+ */
 public abstract class PlusBoard implements Tickable {
     private final Scoreboard scoreboard;
     private final Objective objective;
@@ -27,7 +29,11 @@ public abstract class PlusBoard implements Tickable {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
-    // this will be called when the scoreboard is updated
+    /**
+     * Gets the entries to be displayed on the scoreboard.
+     * @param tick current tick
+     * @return the entries to be displayed on the scoreboard
+     */
     public abstract List<String> getEntries(long tick);
 
     //added a bunch of comments cause this shit is pretty confusing
@@ -88,10 +94,18 @@ public abstract class PlusBoard implements Tickable {
         }
     }
 
+    /**
+     * Sets the title of the scoreboard
+     * @param title the title of the scoreboard
+     */
     public void setTitle(String title) {
         objective.setDisplayName(title);
     }
 
+    /**
+     * Gets the scoreboard
+     * @return the scoreboard
+     */
     public Scoreboard getScoreboard() {
         return scoreboard;
     }

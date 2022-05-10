@@ -1,6 +1,7 @@
 package org.plusmc.pluslib.bukkit.util;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -78,6 +79,19 @@ public class FileUtil {
             fileOutputStream.write(data);
         } catch (Exception ignored) {
             //ignored
+        }
+    }
+
+    public static void deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            for (File file : dir.listFiles()) {
+                deleteDir(file);
+            }
+        }
+        try {
+            Files.delete(dir.toPath());
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

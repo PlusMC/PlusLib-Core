@@ -60,7 +60,7 @@ public interface PlusItem extends Loadable {
      *
      * @param event The event
      */
-    default void onInteractBlock(PlayerInteractEvent event) {
+    default void onInteract(PlayerInteractEvent event) {
         //ignore
     }
 
