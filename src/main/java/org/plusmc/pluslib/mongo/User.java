@@ -1,7 +1,7 @@
 package org.plusmc.pluslib.mongo;
 
 import org.mongodb.morphia.annotations.*;
-import org.plusmc.pluslib.mongo.util.MinecraftReflection;
+import org.plusmc.pluslib.reflection.BungeeSpigotReflection;
 import org.plusmc.pluslib.mongo.util.OtherUtil;
 
 import java.util.UUID;
@@ -38,7 +38,7 @@ public class User {
     }
 
     public Object getPlayer() {
-        return MinecraftReflection.getPlayer(uuid);
+        return BungeeSpigotReflection.getPlayer(uuid);
     }
 
     public User(String uuid, String name, boolean newUser) {
@@ -70,7 +70,7 @@ public class User {
         }
         if(oldLevel < this.level) {
             String message = "§6§lLevel Up! " + oldLevel + " -> " + this.level;
-            MinecraftReflection.sendMessage(this.getPlayer(), message);
+            BungeeSpigotReflection.sendMessage(this.getPlayer(), message);
         }
     }
 
@@ -83,11 +83,11 @@ public class User {
             this.level++;
         }
         String pointMessage = reason + "§6§l +" + points + " Brownie Points!";
-        MinecraftReflection.sendMessage(this.getPlayer(), pointMessage);
+        BungeeSpigotReflection.sendMessage(this.getPlayer(), pointMessage);
         if(oldLevel < this.level) {
             String levelUpMessage = "§6§lLevel Up! " + oldLevel + " -> " + this.level;
-            MinecraftReflection.sendMessage(this.getPlayer(), levelUpMessage);
-            MinecraftReflection.playSound(this.getPlayer(), "entity.player.levelup", 1.0F, 2.0F);
+            BungeeSpigotReflection.sendMessage(this.getPlayer(), levelUpMessage);
+            BungeeSpigotReflection.playSound(this.getPlayer(), "entity.player.levelup", 1.0F, 2.0F);
         }
     }
 
@@ -117,7 +117,7 @@ public class User {
         this.banTime = time + System.currentTimeMillis();
         String reasonMessage = reason.isBlank() ? "" : ", Reason: " + reason;
         String message = "§cYou've been banned for " + OtherUtil.formatTime(time) + reasonMessage;
-        MinecraftReflection.kickPlayer(this.getPlayer(), message);
+        BungeeSpigotReflection.kickPlayer(this.getPlayer(), message);
     }
 
     public void unban() {

@@ -6,7 +6,7 @@
 
     <groupId>org.plusmc</groupId>
     <artifactId>PlusLib</artifactId>
-    <version>0.7-INDEV</version>
+    <version>0.8-INDEV</version>
     <packaging>jar</packaging>
 
     <name>PlusLib</name>
@@ -100,6 +100,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -107,6 +111,18 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.18.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.18-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -124,12 +140,6 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>3.12.11</version>
-        </dependency>
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.18-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

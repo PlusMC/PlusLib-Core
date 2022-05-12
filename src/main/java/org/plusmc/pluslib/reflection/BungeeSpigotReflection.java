@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.mongo.util;
+package org.plusmc.pluslib.reflection;
 
 
 
@@ -8,13 +8,13 @@ import org.plusmc.pluslib.bungee.PlusLibBungee;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class MinecraftReflection {
+public class BungeeSpigotReflection {
 
     public static final String BUKKIT_ENTITY_PLAYER = "org.bukkit.entity.Player";
     public static final String BUKKIT = "org.bukkit.Bukkit";
     public static final String PROXY_SERVER = "net.md_5.bungee.api.ProxyServer";
 
-    private MinecraftReflection() {
+    private BungeeSpigotReflection() {
         throw new IllegalStateException("Utility class");
     }
 

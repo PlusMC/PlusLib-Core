@@ -5,7 +5,7 @@ import com.mongodb.MongoClientOptions;
 import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
-import org.plusmc.pluslib.mongo.util.MinecraftReflection;
+import org.plusmc.pluslib.reflection.BungeeSpigotReflection;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,16 +21,16 @@ public class DatabaseHandler {
     private UserDAO userDAO;
 
     private DatabaseHandler() {
-        MinecraftReflection.runAsync(() -> {
+        BungeeSpigotReflection.runAsync(() -> {
             try {
                 client = new MongoClient("localhost", MongoClientOptions.builder().serverSelectionTimeout(5000).build());
                 morphia = new Morphia();
                 loadDataStore();
-                if(MinecraftReflection.getLogger() != null)
-                    MinecraftReflection.getLogger().info("Connected to MongoDB");
+                if(BungeeSpigotReflection.getLogger() != null)
+                    BungeeSpigotReflection.getLogger().info("Connected to MongoDB");
             } catch (Exception e) {
-                if (MinecraftReflection.getLogger() != null)
-                    MinecraftReflection.getLogger().warning("Failed to connect to database!");
+                if (BungeeSpigotReflection.getLogger() != null)
+                    BungeeSpigotReflection.getLogger().warning("Failed to connect to database!");
                 e.printStackTrace();
                 client.close();
                 client = null;
@@ -65,7 +65,7 @@ public class DatabaseHandler {
     }
 
     public void updateCache() {
-        MinecraftReflection.runAsync(() ->
+        BungeeSpigotReflection.runAsync(() ->
                 cachedUsers = userDAO.find().asList()
         );
     }
@@ -81,7 +81,7 @@ public class DatabaseHandler {
     public void asyncUserAction(UUID uuid, Consumer<User> action) {
         if (!isLoaded())
             return;
-        MinecraftReflection.runAsync(() -> {
+        BungeeSpigotReflection.runAsync(() -> {
             User user = getUser(uuid);
             if (user != null)
                 action.accept(user);
