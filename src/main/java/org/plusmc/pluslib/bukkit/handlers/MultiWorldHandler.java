@@ -5,9 +5,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockEvent;
+import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.entity.PlayerLeashEntityEvent;
+import org.bukkit.event.hanging.HangingEvent;
+import org.bukkit.event.inventory.InventoryEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.vehicle.VehicleEvent;
+import org.bukkit.event.weather.WeatherEvent;
 import org.bukkit.event.world.WorldEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
@@ -53,26 +61,26 @@ public class MultiWorldHandler {
         this.worldEnd = worldEnd;
     }
 
-    public List<World> getWorlds() {
-        List<World> worlds = new ArrayList<>();
-        worlds.add(worldOverworld);
-        if(worldNether != null)
-            worlds.add(worldNether);
-
-        if(worldEnd != null)
-            worlds.add(worldEnd);
-        return worlds;
-    }
-
     public void registerEvents(Listener listener) {
         BukkitUtil.registerWithPreChecks(listener, plugin, (canceled, event) ->
-            canceled.set(
-                    event instanceof PlayerEvent playerEvent && !hasWorld(playerEvent.getPlayer().getWorld()) ||
-                            event instanceof WorldEvent worldEvent && !hasWorld(worldEvent.getWorld()) ||
-                            event instanceof BlockEvent blockEvent && !hasWorld(blockEvent.getBlock().getWorld())
-            )
-        );
+                canceled.set(
+                        event instanceof PlayerEvent playerEvent && !hasWorld(playerEvent.getPlayer().getWorld()) ||
+                                event instanceof WorldEvent worldEvent && !hasWorld(worldEvent.getWorld()) ||
+                                event instanceof BlockEvent blockEvent && !hasWorld(blockEvent.getBlock().getWorld()) ||
+                                event instanceof EntityEvent entityEvent && !hasWorld(entityEvent.getEntity().getWorld()) ||
+                                event instanceof HangingEvent hangingEvent && !hasWorld(hangingEvent.getEntity().getWorld()) ||
+                                event instanceof InventoryEvent inventoryEvent && inventoryEvent.getInventory().getViewers().stream().noneMatch(humanEntity -> hasWorld(humanEntity.getWorld())) ||
+                                event instanceof InventoryMoveItemEvent inventoryMoveItemEvent && inventoryMoveItemEvent.getDestination().getViewers().stream().noneMatch(humanEntity -> hasWorld(humanEntity.getWorld())) ||
+                                event instanceof InventoryPickupItemEvent inventoryPickupItemEvent && !hasWorld(inventoryPickupItemEvent.getItem().getWorld()) ||
+                                event instanceof PlayerLeashEntityEvent playerLeashEntityEvent && !hasWorld(playerLeashEntityEvent.getEntity().getWorld()) ||
+                                event instanceof VehicleEvent vehicleEvent && !hasWorld(vehicleEvent.getVehicle().getWorld()) ||
+                                event instanceof WeatherEvent weatherEvent && !hasWorld(weatherEvent.getWorld())
+                ));
         listeners.add(listener);
+    }
+
+    public boolean hasWorld(World world) {
+        return this.worldOverworld.getName().equals(world.getName()) || this.worldNether != null && this.worldNether.getName().equals(world.getName()) || this.worldEnd != null && this.worldEnd.getName().equals(world.getName());
     }
 
     public void unregisterEvents(Listener listener) {
@@ -91,7 +99,7 @@ public class MultiWorldHandler {
      */
     public void delete() {
         unload(false);
-        for(World world : getWorlds()) {
+        for (World world : getWorlds()) {
             File file = world.getWorldFolder();
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> FileUtil.deleteDir(file));
         }
@@ -100,14 +108,25 @@ public class MultiWorldHandler {
     public void unload(boolean save) {
         HandlerList.unregisterAll(worldListener);
         listeners.forEach(HandlerList::unregisterAll);
-        for(World world : getWorlds()) {
+        for (World world : getWorlds()) {
             world.getPlayers().forEach(player -> player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation()));
             Bukkit.unloadWorld(world, save);
         }
     }
 
+    public List<World> getWorlds() {
+        List<World> worlds = new ArrayList<>();
+        worlds.add(worldOverworld);
+        if (worldNether != null)
+            worlds.add(worldNether);
+
+        if (worldEnd != null)
+            worlds.add(worldEnd);
+        return worlds;
+    }
+
     public void listenForPortal(boolean listen) {
-        if(listen) {
+        if (listen) {
             Bukkit.getPluginManager().registerEvents(worldListener, plugin);
         } else {
             HandlerList.unregisterAll(worldListener);
@@ -120,7 +139,7 @@ public class MultiWorldHandler {
      */
     public void deleteSync() {
         unload(false);
-        for(World world : getWorlds()) {
+        for (World world : getWorlds()) {
             File file = world.getWorldFolder();
             FileUtil.deleteDir(file);
         }
@@ -138,10 +157,6 @@ public class MultiWorldHandler {
     @Nullable
     public World getEnd() {
         return worldEnd;
-    }
-
-    public boolean hasWorld(World world) {
-        return this.worldOverworld.getName().equals(world.getName()) || this.worldNether != null && this.worldNether.getName().equals(world.getName()) || this.worldEnd != null && this.worldEnd.getName().equals(world.getName());
     }
 
     private class WorldListener implements Listener {
