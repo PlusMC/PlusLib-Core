@@ -4,6 +4,7 @@ import org.mongodb.morphia.annotations.*;
 import org.plusmc.pluslib.reflection.BungeeSpigotReflection;
 import org.plusmc.pluslib.mongo.util.OtherUtil;
 
+import java.util.TimeZone;
 import java.util.UUID;
 
 @Entity(value = "users", noClassnameStored = true)
@@ -17,6 +18,8 @@ public class User {
     private long discordId;
     @Indexed
     private String discordName;
+
+    private String timeZone = "";
 
     private long browniePoints;
     private long totalPoints;
@@ -72,6 +75,14 @@ public class User {
             String message = "§6§lLevel Up! " + oldLevel + " -> " + this.level;
             BungeeSpigotReflection.sendMessage(this.getPlayer(), message);
         }
+    }
+
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone.getID();
+    }
+
+    public TimeZone getTimeZone() {
+        return TimeZone.getTimeZone(this.timeZone);
     }
 
     public void addPoints(long points, String reason) {
