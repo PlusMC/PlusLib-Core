@@ -5,6 +5,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
+import org.plusmc.pluslib.bukkit.handlers.VariableHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public abstract class PlusBoard implements Tickable {
         List<Score> newScores = new ArrayList<>();
         List<Score> scoresToRemove = new ArrayList<>();
         List<String> entries = getEntries(tick);
-        resolveRepeats(entries);
+        resolveList(entries);
         for(int i = 0; i < entries.size(); i++) {
             String entry = entries.get(i);
 
@@ -82,16 +83,23 @@ public abstract class PlusBoard implements Tickable {
         }
     }
 
-    private void resolveRepeats(List<String> entries) {
+    private void resolveList(List<String> entries) {
         Map<String, Integer> repeats = new HashMap<>();
         for(int i = 0; i < entries.size(); i++) {
             String entry = entries.get(i);
-            if(repeats.containsKey(entry)) {
+            if(useVariables())
+                entry = VariableHandler.formatString(entry);
+
+            if(repeats.containsKey(entry))
                 entry = entry + "§r".repeat(repeats.get(entry));
-            }
+
             repeats.put(entry, repeats.getOrDefault(entry, 0) + 1);
             entries.set(i, entry);
         }
+    }
+
+    public boolean useVariables() {
+        return false;
     }
 
     /**
