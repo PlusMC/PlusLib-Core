@@ -1,8 +1,8 @@
 package org.plusmc.pluslib.mongo;
 
 import org.mongodb.morphia.annotations.*;
-import org.plusmc.pluslib.reflection.BungeeSpigotReflection;
-import org.plusmc.pluslib.mongo.util.OtherUtil;
+import org.plusmc.pluslib.mongo.util.TimeFormatter;
+import org.plusmc.pluslib.reflection.player.IPlayer;
 
 import java.util.TimeZone;
 import java.util.UUID;
@@ -34,14 +34,19 @@ public class User {
     private String banReason = null;
     private long banTime = 0;
 
+    @Transient
+    private IPlayer player;
+
     @Embedded
     private UserMH userMH;
 
     public User() {
     }
 
-    public Object getPlayer() {
-        return BungeeSpigotReflection.getPlayer(uuid);
+    public IPlayer getPlayer() {
+        if(this.player == null)
+            this.player = IPlayer.getPlayer(UUID.fromString(this.uuid));
+        return this.player;
     }
 
     public User(String uuid, String name, boolean newUser) {
@@ -73,7 +78,7 @@ public class User {
         }
         if(oldLevel < this.level) {
             String message = "§6§lLevel Up! " + oldLevel + " -> " + this.level;
-            BungeeSpigotReflection.sendMessage(this.getPlayer(), message);
+            this.getPlayer().sendMessage(message);
         }
     }
 
@@ -94,11 +99,11 @@ public class User {
             this.level++;
         }
         String pointMessage = reason + "§6§l +" + points + " Brownie Points!";
-        BungeeSpigotReflection.sendMessage(this.getPlayer(), pointMessage);
+        this.getPlayer().sendMessage(pointMessage);
         if(oldLevel < this.level) {
             String levelUpMessage = "§6§lLevel Up! " + oldLevel + " -> " + this.level;
-            BungeeSpigotReflection.sendMessage(this.getPlayer(), levelUpMessage);
-            BungeeSpigotReflection.playSound(this.getPlayer(), "entity.player.levelup", 1.0F, 2.0F);
+            this.getPlayer().sendMessage(levelUpMessage);
+            this.getPlayer().playSound("entity.player.levelup", 1.0F, 2.0F);
         }
     }
 
@@ -127,8 +132,8 @@ public class User {
         this.banReason = reason;
         this.banTime = time + System.currentTimeMillis();
         String reasonMessage = reason.isBlank() ? "" : ", Reason: " + reason;
-        String message = "§cYou've been banned for " + OtherUtil.formatTime(time) + reasonMessage;
-        BungeeSpigotReflection.kickPlayer(this.getPlayer(), message);
+        String message = "§cYou've been banned for " + TimeFormatter.formatTime(time) + reasonMessage;
+        this.getPlayer().kickPlayer(message);
     }
 
     public void unban() {

@@ -3,7 +3,7 @@ package org.plusmc.pluslib.reflection.timings;
 
 import org.bukkit.plugin.Plugin;
 
-public class PaperTimings implements Timings {
+public class PaperTimings implements ITimings {
     private final co.aikar.timings.Timing timings;
 
     public PaperTimings(Plugin plugin, String name) {

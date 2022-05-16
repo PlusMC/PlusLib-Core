@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.plusmc.pluslib.bukkit.managed.Loadable;
 import org.plusmc.pluslib.bukkit.managed.Tickable;
-import org.plusmc.pluslib.reflection.timings.Timings;
+import org.plusmc.pluslib.reflection.timings.ITimings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class TickingManager extends BaseManager {
-    private List<Map.Entry<Tickable, Timings>> tickables;
+    private List<Map.Entry<Tickable, ITimings>> tickables;
     private BukkitTask tickingTask;
     private BukkitTask asyncTickingTask;
     private long tick;
@@ -28,9 +28,9 @@ public class TickingManager extends BaseManager {
     }
 
     private void tick() {
-        for (Map.Entry<Tickable, Timings> entry : tickables) {
+        for (Map.Entry<Tickable, ITimings> entry : tickables) {
             Tickable tickable = entry.getKey();
-            Timings timings = entry.getValue();
+            ITimings timings = entry.getValue();
             if (!(tickable.isRunning() && !tickable.isAsync())) continue;
             timings.startTiming();
             try {
@@ -45,9 +45,9 @@ public class TickingManager extends BaseManager {
     }
 
     private void asyncTick() {
-        for (Map.Entry<Tickable, Timings> entry : tickables) {
+        for (Map.Entry<Tickable, ITimings> entry : tickables) {
             Tickable tickable = entry.getKey();
-            Timings timings = entry.getValue();
+            ITimings timings = entry.getValue();
             if (!(tickable.isRunning() && tickable.isAsync())) continue;
             timings.startTiming();
             try {
@@ -68,7 +68,7 @@ public class TickingManager extends BaseManager {
     @Override
     protected void register(Loadable loadable) {
         if (!(loadable instanceof Tickable tickable)) return;
-        tickables.add(new HashMap.SimpleEntry<>(tickable, Timings.create(getPlugin(), tickable.getClass().getSimpleName() + " (tickable)")));
+        tickables.add(new HashMap.SimpleEntry<>(tickable, ITimings.create(getPlugin(), tickable.getClass().getSimpleName() + " (tickable)")));
         getPlugin().getLogger().info("Registered " + tickable.getClass().getSimpleName() + " to the ticking manager.");
     }
 

@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.plusmc.pluslib.bukkit.PlusLibBukkit;
-import org.plusmc.pluslib.reflection.timings.Timings;
+import org.plusmc.pluslib.reflection.timings.ITimings;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -70,7 +70,7 @@ public class BukkitUtil {
 
             Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
             method.setAccessible(true);
-            final Timings timings = Timings.create(plugin, "Plugin: " + plugin.getDescription().getFullName() + " Event: " + listener.getClass().getName() + "::" + method.getName() + "(" + eventClass.getSimpleName() + ")");
+            final ITimings timings = ITimings.create(plugin, "Plugin: " + plugin.getDescription().getFullName() + " Event: " + listener.getClass().getName() + "::" + method.getName() + "(" + eventClass.getSimpleName() + ")");
             Bukkit.getPluginManager().registerEvent(eventClass, listener, eventHandler.priority(), (listener1, event) -> {
                 if (!eventClass.isAssignableFrom(event.getClass()))
                     return;
