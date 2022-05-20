@@ -1,0 +1,7 @@
+Mongodb:
+  useMongodb: true
+  host: "localhost"
+  port: 27017
+  collection: ""
+  username: ""
+  password: ""

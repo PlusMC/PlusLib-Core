@@ -5,8 +5,15 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
+import org.plusmc.pluslib.mongo.DBConfig;
 import org.plusmc.pluslib.mongo.DatabaseHandler;
+import org.plusmc.pluslib.reflection.config.ConfigBungee;
+import org.plusmc.pluslib.reflection.config.IConfig;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -18,9 +25,26 @@ public class PlusLibBungee extends Plugin {
     public void onEnable() {
         setInstance(this);
         TaskScheduler scheduler = ProxyServer.getInstance().getScheduler();
-        DatabaseHandler.createInstance();
+        File file = new File(getDataFolder(), "config.yml");
+        if (getDataFolder().mkdir()) {
+            if (!file.exists()) {
+                try (InputStream in = getResourceAsStream("config.yml")) {
+                    Files.copy(in, file.toPath());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            getLogger().info("Created data folder");
+        }
+        IConfig config;
+        try {
+            config = IConfig.create(file);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not load config", e);
+        }
+        DatabaseHandler.createInstance(config.read(DBConfig.class));
         this.task = scheduler.schedule(this, () -> {
-            if(DatabaseHandler.getInstance() != null && DatabaseHandler.getInstance().isLoaded())
+            if (DatabaseHandler.getInstance() != null && DatabaseHandler.getInstance().isLoaded())
                 DatabaseHandler.getInstance().updateCache();
         }, 30, 30, TimeUnit.SECONDS);
     }

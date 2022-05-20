@@ -2,6 +2,8 @@ package org.plusmc.pluslib.mongo;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -19,11 +21,28 @@ public class DatabaseHandler {
     private Morphia morphia;
     private List<User> cachedUsers;
     private UserDAO userDAO;
+    private final DBConfig config;
 
-    private DatabaseHandler() {
+    private DatabaseHandler(DBConfig config) {
+        this.config = config;
+        if(!config.useMongodb()) return;
+
         BungeeSpigotReflection.runAsync(() -> {
             try {
-                client = new MongoClient("localhost", MongoClientOptions.builder().serverSelectionTimeout(5000).build());
+                if(config.collection().isBlank() || config.host().isBlank() || config.port() == 0) {
+                    throw new IllegalArgumentException("Invalid mongodb configuration");
+                }
+                MongoClientOptions options = MongoClientOptions.builder().serverSelectionTimeout(5000).build();
+                ServerAddress address = new ServerAddress(config.host(), config.port());
+
+                if(config.username().isBlank() && config.password().isBlank()) {
+                    client = new MongoClient(address, options);
+                } else {
+                    MongoCredential credential = MongoCredential.createCredential(config.username(), config.collection(), config.password().toCharArray());
+                    client = new MongoClient(address, credential, options);
+                }
+
+
                 morphia = new Morphia();
                 loadDataStore();
                 if(BungeeSpigotReflection.getLogger() != null)
@@ -44,7 +63,7 @@ public class DatabaseHandler {
         if(morphia == null) return;
         morphia.map(User.class);
 
-        Datastore datastore = morphia.createDatastore(client, "DEV_PlusMC_DB");
+        Datastore datastore = morphia.createDatastore(client, config.collection());
         datastore.ensureIndexes();
 
         userDAO = new UserDAO(User.class, datastore);
@@ -54,9 +73,9 @@ public class DatabaseHandler {
         return client != null && morphia != null && userDAO != null;
     }
 
-    public static void createInstance() {
+    public static void createInstance(DBConfig config) {
         if (instance == null)
-            instance = new DatabaseHandler();
+            instance = new DatabaseHandler(config);
 
     }
 
