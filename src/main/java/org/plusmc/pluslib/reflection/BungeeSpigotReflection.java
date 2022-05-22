@@ -8,7 +8,7 @@ import org.plusmc.pluslib.bungee.PlusLibBungee;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class BungeeSpigotReflection {
+public abstract class BungeeSpigotReflection {
     public static final String BUKKIT = "org.bukkit.Bukkit";
     public static final String PROXY_SERVER = "net.md_5.bungee.api.ProxyServer";
 

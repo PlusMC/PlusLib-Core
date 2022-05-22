@@ -2,6 +2,6 @@ Mongodb:
   useMongodb: true
   host: "localhost"
   port: 27017
-  collection: ""
+  collection: "PlusLib"
   username: ""
   password: ""

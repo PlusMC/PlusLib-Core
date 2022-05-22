@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.plusmc.pluslib.reflection.BungeeSpigotReflection;
+import org.plusmc.pluslib.reflection.config.ConfigEntry;
+import org.plusmc.pluslib.reflection.config.IConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,29 +23,28 @@ public class DatabaseHandler {
     private Morphia morphia;
     private List<User> cachedUsers;
     private UserDAO userDAO;
-    private final DBConfig config;
 
-    private DatabaseHandler(DBConfig config) {
-        this.config = config;
-        if(!config.useMongodb()) return;
+
+    @ConfigEntry private boolean useMongodb;
+    @ConfigEntry private String host;
+    @ConfigEntry private int port;
+    @ConfigEntry private String collection;
+    @ConfigEntry private String username;
+    @ConfigEntry private String password;
+
+    private DatabaseHandler(IConfig config) {
+        config.writeIntoObject(this);
+        if(!useMongodb) {
+            if(BungeeSpigotReflection.getLogger() != null)
+                BungeeSpigotReflection.getLogger().info("Mongodb is disabled, skipping database setup");
+            return;
+        }
 
         BungeeSpigotReflection.runAsync(() -> {
             try {
-                if(config.collection().isBlank() || config.host().isBlank() || config.port() == 0) {
-                    throw new IllegalArgumentException("Invalid mongodb configuration");
-                }
-                MongoClientOptions options = MongoClientOptions.builder().serverSelectionTimeout(5000).build();
-                ServerAddress address = new ServerAddress(config.host(), config.port());
-
-                if(config.username().isBlank() && config.password().isBlank()) {
-                    client = new MongoClient(address, options);
-                } else {
-                    MongoCredential credential = MongoCredential.createCredential(config.username(), config.collection(), config.password().toCharArray());
-                    client = new MongoClient(address, credential, options);
-                }
-
-
-                morphia = new Morphia();
+                if(collection.isBlank() || host.isBlank() || port == 0)
+                    throw new IllegalArgumentException("Invalid Mongodb Configuration");
+                loadMongodb();
                 loadDataStore();
                 if(BungeeSpigotReflection.getLogger() != null)
                     BungeeSpigotReflection.getLogger().info("Connected to MongoDB");
@@ -59,11 +60,23 @@ public class DatabaseHandler {
         });
     }
 
+    private void loadMongodb() {
+        MongoClientOptions options = MongoClientOptions.builder().serverSelectionTimeout(5000).build();
+        ServerAddress address = new ServerAddress(host, port);
+
+        if(username.isBlank() && password.isBlank()) {
+            client = new MongoClient(address, options);
+        } else {
+            MongoCredential credential = MongoCredential.createCredential(username, collection, password.toCharArray());
+            client = new MongoClient(address, credential, options);
+        }
+    }
+
     private void loadDataStore() {
-        if(morphia == null) return;
+        morphia = new Morphia();
         morphia.map(User.class);
 
-        Datastore datastore = morphia.createDatastore(client, config.collection());
+        Datastore datastore = morphia.createDatastore(client, collection);
         datastore.ensureIndexes();
 
         userDAO = new UserDAO(User.class, datastore);
@@ -73,7 +86,7 @@ public class DatabaseHandler {
         return client != null && morphia != null && userDAO != null;
     }
 
-    public static void createInstance(DBConfig config) {
+    public static void createInstance(IConfig config) {
         if (instance == null)
             instance = new DatabaseHandler(config);
 

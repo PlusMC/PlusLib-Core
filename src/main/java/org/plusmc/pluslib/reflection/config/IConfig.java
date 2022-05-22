@@ -5,6 +5,7 @@ import org.plusmc.pluslib.reflection.BungeeSpigotReflection;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public interface IConfig {
 
@@ -17,12 +18,14 @@ public interface IConfig {
         throw new IllegalStateException("Unsupported server type");
     }
 
-    default void write(Object obj) {
+    IConfig section(String section);
+
+    default void writeIntoConfig(Object obj) {
         try {
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
                 field.setAccessible(true);
-                field.set(obj, this.get(field.getName()));
+                this.set(field.getName(), field.get(obj));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -31,20 +34,29 @@ public interface IConfig {
 
     Object get(String key);
 
-    default <T> T read(Class<T> clazz) {
+    default void writeIntoObject(Object obj) {
         try {
-            T obj = clazz.getDeclaredConstructor().newInstance();
-            Field[] fields = obj.getClass().getDeclaredFields();
-            for (Field field : fields) {
+            for(Field field : obj.getClass().getDeclaredFields()) {
+                if(!field.isAnnotationPresent(ConfigEntry.class))
+                    continue;
+                if(Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
+                    if(BungeeSpigotReflection.getLogger() != null)
+                        BungeeSpigotReflection.getLogger().warning("Cannot read field " + field.getName() + " in " + obj.getClass().getName() + " because it is final or static");
+                    continue;
+                }
                 field.setAccessible(true);
-                this.set(field.getName(), field.get(obj));
+                field.set(obj, this.get(field.getName()));
             }
-            return obj;
+
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalStateException("Unable to read config");
         }
     }
+
+    File getFile();
+
 
     void set(String key, Object value);
 

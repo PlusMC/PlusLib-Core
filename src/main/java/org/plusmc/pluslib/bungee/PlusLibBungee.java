@@ -5,9 +5,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
-import org.plusmc.pluslib.mongo.DBConfig;
 import org.plusmc.pluslib.mongo.DatabaseHandler;
-import org.plusmc.pluslib.reflection.config.ConfigBungee;
 import org.plusmc.pluslib.reflection.config.IConfig;
 
 import java.io.File;
@@ -26,23 +24,28 @@ public class PlusLibBungee extends Plugin {
         setInstance(this);
         TaskScheduler scheduler = ProxyServer.getInstance().getScheduler();
         File file = new File(getDataFolder(), "config.yml");
-        if (getDataFolder().mkdir()) {
-            if (!file.exists()) {
-                try (InputStream in = getResourceAsStream("config.yml")) {
-                    Files.copy(in, file.toPath());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            getLogger().info("Created data folder");
+        if (!getDataFolder().exists() && !getDataFolder().mkdirs()) {
+            getLogger().severe("Could not create data folder!");
+            return;
         }
+
+        if (!file.exists()) {
+            try (InputStream in = getResourceAsStream("config.yml")) {
+                Files.copy(in, file.toPath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         IConfig config;
         try {
             config = IConfig.create(file);
         } catch (IOException e) {
             throw new IllegalStateException("Could not load config", e);
         }
-        DatabaseHandler.createInstance(config.read(DBConfig.class));
+
+        DatabaseHandler.createInstance(config.section("Mongodb"));
+
         this.task = scheduler.schedule(this, () -> {
             if (DatabaseHandler.getInstance() != null && DatabaseHandler.getInstance().isLoaded())
                 DatabaseHandler.getInstance().updateCache();

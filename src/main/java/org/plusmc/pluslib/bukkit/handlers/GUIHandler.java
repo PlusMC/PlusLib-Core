@@ -26,6 +26,7 @@ public class GUIHandler {
     }
 
     private static class InventoryListener implements Listener {
+
         @EventHandler
         public void onInventoryClick(InventoryClickEvent event) {
             if (event.getClickedInventory() == null) return;

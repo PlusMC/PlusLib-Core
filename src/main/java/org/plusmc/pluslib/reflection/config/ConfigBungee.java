@@ -8,12 +8,35 @@ import java.io.File;
 import java.io.IOException;
 
 public class ConfigBungee implements IConfig {
-private final Configuration configuration;
+    private final Configuration configuration;
+    private final IConfig parent;
     private final File file;
+    private final String section;
 
     public ConfigBungee(File file) throws IOException {
         this.file = file;
         this.configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+        this.parent = null;
+        this.section = null;
+    }
+
+    public ConfigBungee(Configuration configuration, File file) {
+        this.configuration = configuration;
+        this.file = file;
+        this.parent = null;
+        this.section = null;
+    }
+
+    public ConfigBungee( IConfig parent, Configuration configuration, String section) {
+        this.configuration = configuration;
+        this.parent = parent;
+        this.file = parent.getFile();
+        this.section = section;
+    }
+
+    @Override
+    public IConfig section(String section) {
+        return new ConfigBungee(this, configuration.getSection(section), section);
     }
 
     @Override
@@ -22,12 +45,22 @@ private final Configuration configuration;
     }
 
     @Override
+    public File getFile() {
+        return file;
+    }
+
+    @Override
     public void set(String key, Object value) {
-        configuration.set(key, value);
+        if(parent != null)
+            parent.set(section + "." + key, value);
+        else configuration.set(key, value);
     }
 
     @Override
     public void save() throws IOException {
-        ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, file);
+        if(parent == null)
+            ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, file);
+        else parent.save();
     }
+
 }

@@ -1,5 +1,6 @@
 package org.plusmc.pluslib.bukkit.managed;
 
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -10,10 +11,23 @@ import java.util.*;
 
 public abstract class PlusGUI implements Loadable, InventoryHolder {
     private final Map<Integer, GUIElement> elements;
-    private final Inventory inventory;
+    @NotNull private Inventory inventory;
+
+    protected PlusGUI(boolean generate) {
+        this.elements = new HashMap<>();
+        if (generate) {
+            inventory = this.createInventory();
+            draw();
+        } else inventory = Bukkit.createInventory(this, 9, "Placeholder");
+    }
 
     protected PlusGUI() {
         this.elements = new HashMap<>();
+        inventory = this.createInventory();
+        draw();
+    }
+
+    protected void regenerateInventory() {
         this.inventory = this.createInventory();
         draw();
     }

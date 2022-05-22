@@ -17,6 +17,22 @@ public abstract class PaginatedGUI extends PlusGUI {
         draw();
     }
 
+    protected PaginatedGUI(boolean generate) {
+        super(generate);
+        this.pages = new HashMap<>();
+        if(generate) {
+            createPages();
+            draw();
+        }
+    }
+
+    @Override
+    protected void regenerateInventory() {
+        super.regenerateInventory();
+        createPages();
+        draw();
+    }
+
     protected abstract void createPages();
 
     public int getPageAmount() {

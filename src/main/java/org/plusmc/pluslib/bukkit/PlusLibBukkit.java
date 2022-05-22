@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.plusmc.pluslib.bukkit.util.BukkitUtil;
 import org.plusmc.pluslib.bukkit.util.BungeeUtil;
-import org.plusmc.pluslib.mongo.DBConfig;
 import org.plusmc.pluslib.mongo.DatabaseHandler;
 import org.plusmc.pluslib.reflection.config.IConfig;
 
@@ -61,9 +60,8 @@ public final class PlusLibBukkit extends JavaPlugin {
         } catch (IOException e) {
             throw new IllegalStateException("Could not load config", e);
         }
-        DatabaseHandler.createInstance(config.read(DBConfig.class));
 
-
+        DatabaseHandler.createInstance(config.section("Mongodb"));
 
         Bukkit.getPluginManager().registerEvents(new BukkitUtil.Listener(), this);
     }
