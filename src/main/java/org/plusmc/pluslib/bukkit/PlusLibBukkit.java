@@ -2,8 +2,12 @@ package org.plusmc.pluslib.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.plusmc.pluslib.bukkit.managing.BaseManager;
+import org.plusmc.pluslib.bukkit.managing.PlusCommandManager;
 import org.plusmc.pluslib.bukkit.util.BukkitUtil;
 import org.plusmc.pluslib.bukkit.util.BungeeUtil;
+import org.plusmc.pluslib.bukkit.voicechat.PlusLibVoicechat;
+import org.plusmc.pluslib.bukkit.voicechat.PlusSound;
 import org.plusmc.pluslib.mongo.DatabaseHandler;
 import org.plusmc.pluslib.reflection.config.IConfig;
 
@@ -22,6 +26,8 @@ public final class PlusLibBukkit extends JavaPlugin {
 
     public static final String BUNGEE_CORD = "BungeeCord";
     public static final String PLUSMC_BUNGEE = "plusmc:bungee";
+
+    public static PlusSound SOUND_TEST = new PlusSound("test.wav", "test");
 
 
     /**
@@ -62,6 +68,15 @@ public final class PlusLibBukkit extends JavaPlugin {
         }
 
         DatabaseHandler.createInstance(config.section("Mongodb"));
+
+        if(Bukkit.getPluginManager().isPluginEnabled("voicechat")) {
+            getLogger().info("VoiceChat detected, enabling VoiceChat support");
+            PlusLibVoicechat.createInstance(config.section("VoiceChat"));
+            PlusLibVoicechat.getInstance().loadSound(SOUND_TEST);
+        }
+
+        BaseManager.createManager(PlusCommandManager.class, this);
+        BaseManager.registerAny(new TestCommand(), this);
 
         Bukkit.getPluginManager().registerEvents(new BukkitUtil.Listener(), this);
     }
