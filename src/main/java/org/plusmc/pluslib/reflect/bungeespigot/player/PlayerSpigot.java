@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.reflection.player;
+package org.plusmc.pluslib.reflect.bungeespigot.player;
 
 import org.bukkit.entity.Player;
 

@@ -2,7 +2,7 @@ package org.plusmc.pluslib.mongo;
 
 import org.mongodb.morphia.annotations.*;
 import org.plusmc.pluslib.mongo.util.TimeFormatter;
-import org.plusmc.pluslib.reflection.player.IPlayer;
+import org.plusmc.pluslib.reflect.bungeespigot.player.IPlayer;
 
 import java.util.TimeZone;
 import java.util.UUID;

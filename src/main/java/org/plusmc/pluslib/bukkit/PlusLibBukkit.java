@@ -9,7 +9,7 @@ import org.plusmc.pluslib.bukkit.util.BungeeUtil;
 import org.plusmc.pluslib.bukkit.voicechat.PlusLibVoicechat;
 import org.plusmc.pluslib.bukkit.voicechat.PlusSound;
 import org.plusmc.pluslib.mongo.DatabaseHandler;
-import org.plusmc.pluslib.reflection.config.IConfig;
+import org.plusmc.pluslib.reflect.bungeespigot.config.IConfig;
 
 
 import java.io.File;
@@ -77,6 +77,7 @@ public final class PlusLibBukkit extends JavaPlugin {
 
         BaseManager.createManager(PlusCommandManager.class, this);
         BaseManager.registerAny(new TestCommand(), this);
+        BaseManager.registerAny(new PacketListenCommand(), this);
 
         Bukkit.getPluginManager().registerEvents(new BukkitUtil.Listener(), this);
     }
