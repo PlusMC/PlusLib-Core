@@ -38,10 +38,18 @@ public class PlusLibVoicechat implements VoicechatPlugin {
     }
 
     public static void createInstance(IConfig config) {
+
+        if(getSoundsFolder().mkdir())
+            PlusLibBukkit.getInstance().getLogger().info("Created Sound Folder");
+        else PlusLibBukkit.getInstance().getLogger().severe("Could Not Create Sound Folder");
+
+
         if(instance != null) {
             PlusLibBukkit.getInstance().getLogger().warning("Voicechat Plugin is already initialized!");
             return;
         }
+
+
 
         BukkitVoicechatService service = Bukkit.getServicesManager().load(BukkitVoicechatService.class);
         if (service != null) {

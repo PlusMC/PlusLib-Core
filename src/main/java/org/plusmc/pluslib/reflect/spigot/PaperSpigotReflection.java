@@ -1,7 +1,6 @@
 package org.plusmc.pluslib.reflect.spigot;
 
 import org.bukkit.Bukkit;
-import org.plusmc.pluslib.reflect.spigot.versions.VersionReflect;
 
 public abstract class PaperSpigotReflection {
 
@@ -15,14 +14,4 @@ public abstract class PaperSpigotReflection {
             return false;
         }
     }
-
-    public static String getBukkitVersion() {
-        return Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-    }
-
-
-    public static VersionReflect getVersionReflect() {
-        return VersionReflect.getVersionReflect(getBukkitVersion());
-    }
-
 }
