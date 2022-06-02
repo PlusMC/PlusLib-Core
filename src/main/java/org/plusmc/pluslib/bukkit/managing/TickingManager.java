@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.plusmc.pluslib.bukkit.managed.Loadable;
 import org.plusmc.pluslib.bukkit.managed.Tickable;
-import org.plusmc.pluslib.reflection.timings.ITimings;
+import org.plusmc.pluslib.reflect.spigot.timings.ITimings;
 
 import java.util.ArrayList;
 import java.util.HashMap;

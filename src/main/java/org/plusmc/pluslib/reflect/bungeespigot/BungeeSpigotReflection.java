@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.reflection;
+package org.plusmc.pluslib.reflect.bungeespigot;
 
 
 

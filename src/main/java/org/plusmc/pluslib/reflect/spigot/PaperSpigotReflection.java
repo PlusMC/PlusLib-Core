@@ -1,9 +1,11 @@
-package org.plusmc.pluslib.reflection;
+package org.plusmc.pluslib.reflect.spigot;
 
-public interface PaperSpigotReflection {
+import org.bukkit.Bukkit;
+
+public abstract class PaperSpigotReflection {
 
 
-    static boolean isPaper() {
+    public static boolean isPaper() {
         try {
             // weird way to check if its paper but whatever
             Class.forName("co.aikar.timings.Timing");

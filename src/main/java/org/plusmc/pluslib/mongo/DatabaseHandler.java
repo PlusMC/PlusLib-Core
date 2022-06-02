@@ -7,9 +7,9 @@ import com.mongodb.ServerAddress;
 import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
-import org.plusmc.pluslib.reflection.BungeeSpigotReflection;
-import org.plusmc.pluslib.reflection.config.ConfigEntry;
-import org.plusmc.pluslib.reflection.config.IConfig;
+import org.plusmc.pluslib.reflect.bungeespigot.BungeeSpigotReflection;
+import org.plusmc.pluslib.reflect.bungeespigot.config.ConfigEntry;
+import org.plusmc.pluslib.reflect.bungeespigot.config.IConfig;
 
 import java.util.Collections;
 import java.util.List;

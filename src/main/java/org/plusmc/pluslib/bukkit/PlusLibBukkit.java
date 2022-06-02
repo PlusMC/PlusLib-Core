@@ -4,8 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.plusmc.pluslib.bukkit.util.BukkitUtil;
 import org.plusmc.pluslib.bukkit.util.BungeeUtil;
+import org.plusmc.pluslib.bukkit.voicechat.PlusLibVoicechat;
 import org.plusmc.pluslib.mongo.DatabaseHandler;
-import org.plusmc.pluslib.reflection.config.IConfig;
+import org.plusmc.pluslib.reflect.bungeespigot.config.IConfig;
 
 
 import java.io.File;
@@ -62,6 +63,11 @@ public final class PlusLibBukkit extends JavaPlugin {
         }
 
         DatabaseHandler.createInstance(config.section("Mongodb"));
+
+        if(Bukkit.getPluginManager().isPluginEnabled("voicechat")) {
+            getLogger().info("VoiceChat detected, enabling VoiceChat support");
+            PlusLibVoicechat.createInstance(config.section("VoiceChat"));
+        }
 
         Bukkit.getPluginManager().registerEvents(new BukkitUtil.Listener(), this);
     }

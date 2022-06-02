@@ -5,3 +5,4 @@ api-version: 1.18
 authors: [ OakleyCord ]
 description: A library plugin for the Plus MC server
 website: https://plusmc.org
+softdepend: [ voicechat ]

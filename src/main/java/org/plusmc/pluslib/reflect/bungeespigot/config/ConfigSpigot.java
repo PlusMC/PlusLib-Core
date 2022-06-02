@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.reflection.config;
+package org.plusmc.pluslib.reflect.bungeespigot.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
