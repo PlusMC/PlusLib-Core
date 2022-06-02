@@ -9,11 +9,14 @@ import org.plusmc.pluslib.bukkit.managing.TickingManager;
 @SuppressWarnings("unused")
 public interface Tickable extends Loadable {
 
+
+
     /**
      * The {@link TickingManager} will call this method for every tick.
      *
      * @param tick The amount of ticks since the {@link TickingManager} was started.
      */
+
     void tick(long tick);
 
     /**
@@ -29,4 +32,5 @@ public interface Tickable extends Loadable {
     default boolean isRunning() {
         return true;
     }
+
 }

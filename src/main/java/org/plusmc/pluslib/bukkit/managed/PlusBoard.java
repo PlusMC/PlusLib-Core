@@ -23,8 +23,9 @@ public abstract class PlusBoard implements Tickable {
 
     protected PlusBoard(String title) {
         scores = new ArrayList<>();
-        if(Bukkit.getScoreboardManager() == null)
-            throw new IllegalStateException("A world has not loaded yet so a scoreboard cannot be created.");
+        if(Bukkit.getScoreboardManager() == null) {
+            throw new IllegalStateException("Scoreboard manager is null");
+        }
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         objective = scoreboard.registerNewObjective(title, "dummy", title);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);

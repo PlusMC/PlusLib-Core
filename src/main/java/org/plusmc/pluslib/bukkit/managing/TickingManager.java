@@ -7,10 +7,7 @@ import org.plusmc.pluslib.bukkit.managed.Loadable;
 import org.plusmc.pluslib.bukkit.managed.Tickable;
 import org.plusmc.pluslib.reflect.spigot.timings.ITimings;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Provides a way to register and unregister {@link Tickable} objects.
@@ -18,6 +15,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class TickingManager extends BaseManager {
     private List<Map.Entry<Tickable, ITimings>> tickables;
+    private List<Tickable> markForRemoval;
     private BukkitTask tickingTask;
     private BukkitTask asyncTickingTask;
     private long tick;
@@ -28,9 +26,15 @@ public class TickingManager extends BaseManager {
     }
 
     private void tick() {
-        for (Map.Entry<Tickable, ITimings> entry : tickables) {
+        for(Iterator<Map.Entry<Tickable,ITimings>> iterator = tickables.iterator(); iterator.hasNext();) {
+            Map.Entry<Tickable, ITimings> entry = iterator.next();
             Tickable tickable = entry.getKey();
             ITimings timings = entry.getValue();
+            if(markForRemoval.contains(tickable)) {
+                iterator.remove();
+                continue;
+            }
+
             if (!(tickable.isRunning() && !tickable.isAsync())) continue;
             timings.startTiming();
             try {
@@ -40,18 +44,23 @@ public class TickingManager extends BaseManager {
             }
             timings.stopTiming();
         }
-
         tick++;
     }
 
     private void asyncTick() {
-        for (Map.Entry<Tickable, ITimings> entry : tickables) {
+        for(Iterator<Map.Entry<Tickable,ITimings>> iterator = tickables.iterator(); iterator.hasNext();) {
+            Map.Entry<Tickable, ITimings> entry = iterator.next();
             Tickable tickable = entry.getKey();
             ITimings timings = entry.getValue();
+            if(markForRemoval.contains(tickable)) {
+                iterator.remove();
+                continue;
+            }
+
             if (!(tickable.isRunning() && tickable.isAsync())) continue;
             timings.startTiming();
             try {
-                tickable.tick(asyncTick);
+                tickable.tick(tick);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -75,8 +84,10 @@ public class TickingManager extends BaseManager {
     @Override
     protected void unregister(Loadable loadable) {
         if (!(loadable instanceof Tickable tickable)) return;
-        tickables.removeIf(entry -> entry.getKey() == tickable);
-        tickable.unload();
+        tickables.forEach(entry -> {
+            if(entry.getKey() == tickable)
+                markForRemoval.add(tickable);
+        });
         getPlugin().getLogger().info("Unregistered " + tickable.getClass().getSimpleName() + " from the ticking manager.");
     }
 
@@ -85,6 +96,7 @@ public class TickingManager extends BaseManager {
         tick = 0;
         asyncTick = 0;
         tickables = new ArrayList<>();
+        markForRemoval = new ArrayList<>();
         tickingTask = Bukkit.getScheduler().runTaskTimer(getPlugin(), this::tick, 0L, 1L);
         asyncTickingTask = Bukkit.getScheduler().runTaskTimerAsynchronously(getPlugin(), this::asyncTick, 0L, 1L);
     }
