@@ -32,6 +32,7 @@ public class TickingManager extends BaseManager {
             ITimings timings = entry.getValue();
             if(markForRemoval.contains(tickable)) {
                 iterator.remove();
+                markForRemoval.remove(tickable);
                 continue;
             }
 
@@ -54,6 +55,7 @@ public class TickingManager extends BaseManager {
             ITimings timings = entry.getValue();
             if(markForRemoval.contains(tickable)) {
                 iterator.remove();
+                markForRemoval.remove(tickable);
                 continue;
             }
 
@@ -85,7 +87,7 @@ public class TickingManager extends BaseManager {
     protected void unregister(Loadable loadable) {
         if (!(loadable instanceof Tickable tickable)) return;
         tickables.forEach(entry -> {
-            if(entry.getKey() == tickable)
+            if(entry.getKey().equals(tickable))
                 markForRemoval.add(tickable);
         });
         getPlugin().getLogger().info("Unregistered " + tickable.getClass().getSimpleName() + " from the ticking manager.");
