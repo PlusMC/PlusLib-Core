@@ -5,7 +5,7 @@ import org.plusmc.pluslib.reflect.spigot.PaperSpigotReflection;
 
 public interface ITimings {
     static ITimings create(Plugin plugin, String name) {
-        if(PaperSpigotReflection.isPaper()) {
+        if (PaperSpigotReflection.isPaper()) {
             return new PaperTimings(plugin, name);
         } else {
             return new SpigotTimings(name);
@@ -13,6 +13,9 @@ public interface ITimings {
     }
 
     void startTiming();
+
     void stopTiming();
-    default void close() {};
+
+    default void close() {
+    }
 }

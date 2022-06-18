@@ -45,13 +45,12 @@ public interface PlusCommand extends CommandExecutor, TabCompleter, Loadable {
      */
     String getDescription();
 
-    /**
-     * Gets the completions of the command.
-     *
-     * @param index Index of the current argument
-     * @return Completions of the command
-     */
-    List<String> getCompletions(int index);
+    @Override
+    default List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+        if (args.length == 0)
+            return new ArrayList<>();
+        return filterCompletions(args[args.length - 1], args.length);
+    }
 
     /**
      * Filters the completions for the given argument.
@@ -72,10 +71,11 @@ public interface PlusCommand extends CommandExecutor, TabCompleter, Loadable {
         return filtered;
     }
 
-    @Override
-    default List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
-        if (args.length == 0)
-            return new ArrayList<>();
-        return filterCompletions(args[args.length - 1], args.length);
-    }
+    /**
+     * Gets the completions of the command.
+     *
+     * @param index Index of the current argument
+     * @return Completions of the command
+     */
+    List<String> getCompletions(int index);
 }

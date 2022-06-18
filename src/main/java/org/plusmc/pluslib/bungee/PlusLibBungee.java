@@ -19,6 +19,18 @@ public class PlusLibBungee extends Plugin {
     private static PlusLibBungee instance;
     private ScheduledTask task;
 
+    public static Logger logger() {
+        return instance.getLogger();
+    }
+
+    public static PlusLibBungee getInstance() {
+        return instance;
+    }
+
+    private static void setInstance(PlusLibBungee instance) {
+        PlusLibBungee.instance = instance;
+    }
+
     @Override
     public void onEnable() {
         setInstance(this);
@@ -52,21 +64,9 @@ public class PlusLibBungee extends Plugin {
         }, 30, 30, TimeUnit.SECONDS);
     }
 
-    public static Logger logger()  {
-        return instance.getLogger();
-    }
-
-    private static void setInstance(PlusLibBungee instance) {
-        PlusLibBungee.instance = instance;
-    }
-
     @Override
     public void onDisable() {
         task.cancel();
         setInstance(null);
-    }
-
-    public static PlusLibBungee getInstance() {
-        return instance;
     }
 }

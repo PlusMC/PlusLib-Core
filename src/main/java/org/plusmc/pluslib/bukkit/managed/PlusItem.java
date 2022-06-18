@@ -18,26 +18,6 @@ import java.util.Arrays;
 @SuppressWarnings("unused")
 public interface PlusItem extends Loadable {
     /**
-     * @return The ID of the item
-     */
-    String getID();
-
-    /**
-     * @return The name of the item
-     */
-    String getName();
-
-    /**
-     * @return The lore of the item
-     */
-    String[] getLore();
-
-    /**
-     * @return The material of the item
-     */
-    Material getMaterial();
-
-    /**
      * Called when the item is used to damage an entity
      *
      * @param event The event
@@ -97,4 +77,24 @@ public interface PlusItem extends Loadable {
         stack.setItemMeta(meta);
         return stack;
     }
+
+    /**
+     * @return The material of the item
+     */
+    Material getMaterial();
+
+    /**
+     * @return The name of the item
+     */
+    String getName();
+
+    /**
+     * @return The lore of the item
+     */
+    String[] getLore();
+
+    /**
+     * @return The ID of the item
+     */
+    String getID();
 }

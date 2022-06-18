@@ -9,7 +9,7 @@ public class TimeFormatter {
 
     //thank you github copilot :praying_hands:
     public static String formatTime(long time) {
-        String timeString = "";
+        String timeString;
         if (time >= 86400000) {
             timeString = String.format("%d days", time / 86400000);
         } else if (time >= 3600000) {

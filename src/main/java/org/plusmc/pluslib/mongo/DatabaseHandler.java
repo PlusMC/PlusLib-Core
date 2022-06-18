@@ -25,28 +25,34 @@ public class DatabaseHandler {
     private UserDAO userDAO;
 
 
-    @ConfigEntry private boolean useMongodb;
-    @ConfigEntry private String host;
-    @ConfigEntry private int port;
-    @ConfigEntry private String collection;
-    @ConfigEntry private String username;
-    @ConfigEntry private String password;
+    @ConfigEntry
+    private boolean useMongodb;
+    @ConfigEntry
+    private String host;
+    @ConfigEntry
+    private int port;
+    @ConfigEntry
+    private String collection;
+    @ConfigEntry
+    private String username;
+    @ConfigEntry
+    private String password;
 
     private DatabaseHandler(IConfig config) {
         config.writeIntoObject(this);
-        if(!useMongodb) {
-            if(BungeeSpigotReflection.getLogger() != null)
+        if (!useMongodb) {
+            if (BungeeSpigotReflection.getLogger() != null)
                 BungeeSpigotReflection.getLogger().info("Mongodb is disabled, skipping database setup");
             return;
         }
 
         BungeeSpigotReflection.runAsync(() -> {
             try {
-                if(collection.isBlank() || host.isBlank() || port == 0)
+                if (collection.isBlank() || host.isBlank() || port == 0)
                     throw new IllegalArgumentException("Invalid Mongodb Configuration");
                 loadMongodb();
                 loadDataStore();
-                if(BungeeSpigotReflection.getLogger() != null)
+                if (BungeeSpigotReflection.getLogger() != null)
                     BungeeSpigotReflection.getLogger().info("Connected to MongoDB");
             } catch (Exception e) {
                 if (BungeeSpigotReflection.getLogger() != null)
@@ -64,7 +70,7 @@ public class DatabaseHandler {
         MongoClientOptions options = MongoClientOptions.builder().serverSelectionTimeout(5000).build();
         ServerAddress address = new ServerAddress(host, port);
 
-        if(username.isBlank() && password.isBlank()) {
+        if (username.isBlank() && password.isBlank()) {
             client = new MongoClient(address, options);
         } else {
             MongoCredential credential = MongoCredential.createCredential(username, collection, password.toCharArray());
@@ -80,10 +86,6 @@ public class DatabaseHandler {
         datastore.ensureIndexes();
 
         userDAO = new UserDAO(User.class, datastore);
-    }
-
-    public boolean isLoaded() {
-        return client != null && morphia != null && userDAO != null;
     }
 
     public static void createInstance(IConfig config) {
@@ -102,7 +104,6 @@ public class DatabaseHandler {
         );
     }
 
-
     /**
      * Asynchronously executes the given action on the user with the given UUID.
      * Saves the user if the action modifies it.
@@ -119,6 +120,10 @@ public class DatabaseHandler {
                 action.accept(user);
             saveUser(user);
         });
+    }
+
+    public boolean isLoaded() {
+        return client != null && morphia != null && userDAO != null;
     }
 
     private User getUser(UUID uuid) {

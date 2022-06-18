@@ -25,12 +25,22 @@ public class TickingManager extends BaseManager {
         super(plugin);
     }
 
+    @Override
+    protected void init() {
+        tick = 0;
+        asyncTick = 0;
+        tickables = new ArrayList<>();
+        markForRemoval = new ArrayList<>();
+        tickingTask = Bukkit.getScheduler().runTaskTimer(getPlugin(), this::tick, 0L, 1L);
+        asyncTickingTask = Bukkit.getScheduler().runTaskTimerAsynchronously(getPlugin(), this::asyncTick, 0L, 1L);
+    }
+
     private void tick() {
-        for(Iterator<Map.Entry<Tickable,ITimings>> iterator = tickables.iterator(); iterator.hasNext();) {
+        for (Iterator<Map.Entry<Tickable, ITimings>> iterator = tickables.iterator(); iterator.hasNext(); ) {
             Map.Entry<Tickable, ITimings> entry = iterator.next();
             Tickable tickable = entry.getKey();
             ITimings timings = entry.getValue();
-            if(markForRemoval.contains(tickable)) {
+            if (markForRemoval.contains(tickable)) {
                 iterator.remove();
                 markForRemoval.remove(tickable);
                 continue;
@@ -49,11 +59,11 @@ public class TickingManager extends BaseManager {
     }
 
     private void asyncTick() {
-        for(Iterator<Map.Entry<Tickable,ITimings>> iterator = tickables.iterator(); iterator.hasNext();) {
+        for (Iterator<Map.Entry<Tickable, ITimings>> iterator = tickables.iterator(); iterator.hasNext(); ) {
             Map.Entry<Tickable, ITimings> entry = iterator.next();
             Tickable tickable = entry.getKey();
             ITimings timings = entry.getValue();
-            if(markForRemoval.contains(tickable)) {
+            if (markForRemoval.contains(tickable)) {
                 iterator.remove();
                 markForRemoval.remove(tickable);
                 continue;
@@ -87,20 +97,10 @@ public class TickingManager extends BaseManager {
     protected void unregister(Loadable loadable) {
         if (!(loadable instanceof Tickable tickable)) return;
         tickables.forEach(entry -> {
-            if(entry.getKey().equals(tickable))
+            if (entry.getKey().equals(tickable))
                 markForRemoval.add(tickable);
         });
         getPlugin().getLogger().info("Unregistered " + tickable.getClass().getSimpleName() + " from the ticking manager.");
-    }
-
-    @Override
-    protected void init() {
-        tick = 0;
-        asyncTick = 0;
-        tickables = new ArrayList<>();
-        markForRemoval = new ArrayList<>();
-        tickingTask = Bukkit.getScheduler().runTaskTimer(getPlugin(), this::tick, 0L, 1L);
-        asyncTickingTask = Bukkit.getScheduler().runTaskTimerAsynchronously(getPlugin(), this::asyncTick, 0L, 1L);
     }
 
     @Override

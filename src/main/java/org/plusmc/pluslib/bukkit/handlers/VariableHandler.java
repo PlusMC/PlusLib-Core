@@ -6,10 +6,10 @@ import java.util.Map;
 
 public class VariableHandler {
 
+    private static final Map<String, String> variables = new HashMap<>();
+
     private VariableHandler() {
     }
-
-    private static final Map<String, String> variables = new HashMap<>();
 
     public static void setVariable(final String key, final String value) {
         variables.put(key, value);
@@ -25,7 +25,7 @@ public class VariableHandler {
 
     public static String formatString(String string) {
         final ArrayList<String> keys = new ArrayList<>(variables.keySet());
-        for(final String key : keys) {
+        for (final String key : keys) {
             final String value = variables.get(key);
             string = string.replace("%" + key + "%", value);
         }

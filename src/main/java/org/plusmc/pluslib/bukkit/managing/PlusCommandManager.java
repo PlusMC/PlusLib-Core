@@ -27,19 +27,6 @@ public class PlusCommandManager extends BaseManager {
         super(plugin);
     }
 
-    private PluginCommand createCommand(String name, JavaPlugin plugin) {
-        PluginCommand command = null;
-        try {
-            Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
-            c.setAccessible(true);
-            command = c.newInstance(name, plugin);
-        } catch (Exception e) {
-            getPlugin().getLogger().severe("Failed to create PluginCommand");
-        }
-
-        return command;
-    }
-
     private CommandMap getCommandMap() {
         CommandMap map = null;
         try {
@@ -53,6 +40,16 @@ public class PlusCommandManager extends BaseManager {
         }
 
         return map;
+    }
+
+    @Override
+    protected void init() {
+        commands = new ArrayList<>();
+    }
+
+    @Override
+    public Class<? extends Loadable> getManaged() {
+        return PlusCommand.class;
     }
 
     /**
@@ -75,6 +72,19 @@ public class PlusCommandManager extends BaseManager {
         getPlugin().getLogger().info("Registered command: " + pCmd.getName());
     }
 
+    private PluginCommand createCommand(String name, JavaPlugin plugin) {
+        PluginCommand command = null;
+        try {
+            Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
+            c.setAccessible(true);
+            command = c.newInstance(name, plugin);
+        } catch (Exception e) {
+            getPlugin().getLogger().severe("Failed to create PluginCommand");
+        }
+
+        return command;
+    }
+
     /**
      * Registers the command. Will be called automatically when the library plugin is unloaded.
      *
@@ -92,17 +102,6 @@ public class PlusCommandManager extends BaseManager {
         pCmd.unload();
         getPlugin().getLogger().info("Unregistered command: " + pCmd.getName());
     }
-
-    @Override
-    protected void init() {
-        commands = new ArrayList<>();
-    }
-
-    @Override
-    public Class<? extends Loadable> getManaged() {
-        return PlusCommand.class;
-    }
-
 
     @Override
     protected void shutdown() {

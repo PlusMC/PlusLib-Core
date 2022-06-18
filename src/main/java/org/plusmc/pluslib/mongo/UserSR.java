@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Embedded
-public class UserMH {
+public class UserSR {
     private Map<String, Long> personalBests;
 
 
@@ -38,12 +38,10 @@ public class UserMH {
     }
 
     public void addPersonalBest(String key, long value) {
-        if (personalBests == null)
-            personalBests = new HashMap<>();
+        if (personalBests == null) personalBests = new HashMap<>();
 
-        personalBests.computeIfAbsent(key, k -> personalBests.put(k, value));
 
-        personalBests.put(key, Math.max(value, personalBests.get(key)));
+        personalBests.put(key, Math.min(value, personalBests.getOrDefault(key, Long.MAX_VALUE)));
     }
 
     public void removePersonalBest(String key) {
@@ -121,6 +119,7 @@ public class UserMH {
     }
 
     public Map<String, Long> getPersonalBests() {
+        if (personalBests == null) personalBests = new HashMap<>();
         return Map.copyOf(personalBests);
     }
 }

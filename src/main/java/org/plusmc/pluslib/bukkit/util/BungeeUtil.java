@@ -22,8 +22,8 @@ import java.util.logging.Level;
 @SuppressWarnings("unused")
 public class BungeeUtil implements PluginMessageListener {
     public static final String BUNGEE_CORD = "BungeeCord";
-    private static HashMap<String, ServerInfo> serverInfo = new HashMap<>();
-    private static HashMap<String, PlayerList> playerList = new HashMap<>();
+    private static final HashMap<String, ServerInfo> serverInfo = new HashMap<>();
+    private static final HashMap<String, PlayerList> playerList = new HashMap<>();
     private static boolean isPlusMC = false;
 
     /**
@@ -129,6 +129,23 @@ public class BungeeUtil implements PluginMessageListener {
         }
     }
 
+    private void handleServerIP(ByteArrayDataInput in) {
+        try {
+            String server = in.readUTF();
+            String ip = in.readUTF();
+            int port = in.readUnsignedShort();
+            serverInfo.put(server, new ServerInfo(server, ip, port, false));
+            updateOnline(serverInfo.get(server));
+        } catch (Exception e) {
+            //ignore
+        }
+    }
+
+    private static void handleCheckPlusMC() {
+        PlusLibBukkit.getInstance().getLogger().info("Using PlusMC Bungee!");
+        isPlusMC = true;
+    }
+
     private void updateOnline(ServerInfo info) {
         Bukkit.getScheduler().runTaskAsynchronously(PlusLibBukkit.getInstance(), () -> {
             InetSocketAddress address = new InetSocketAddress(info.ip(), info.port());
@@ -143,24 +160,6 @@ public class BungeeUtil implements PluginMessageListener {
                 serverInfo.put(info.server(), info1);
             }
         });
-    }
-
-    private void handleServerIP(ByteArrayDataInput in) {
-        try {
-            String server = in.readUTF();
-            String ip = in.readUTF();
-            int port = in.readUnsignedShort();
-            serverInfo.put(server, new ServerInfo(server, ip, port, false));
-            updateOnline(serverInfo.get(server));
-        } catch (Exception e) {
-            //ignore
-        }
-    }
-
-
-    private static void handleCheckPlusMC() {
-        PlusLibBukkit.getInstance().getLogger().info("Using PlusMC Bungee!");
-        isPlusMC = true;
     }
 
     /**

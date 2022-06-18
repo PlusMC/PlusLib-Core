@@ -8,7 +8,6 @@ import org.plusmc.pluslib.bukkit.voicechat.PlusLibVoicechat;
 import org.plusmc.pluslib.mongo.DatabaseHandler;
 import org.plusmc.pluslib.reflect.bungeespigot.config.IConfig;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -24,6 +23,15 @@ public final class PlusLibBukkit extends JavaPlugin {
     public static final String BUNGEE_CORD = "BungeeCord";
     public static final String PLUSMC_BUNGEE = "plusmc:bungee";
 
+    /**
+     * Gets the {@link Logger} of the plugin.
+     * Do not use this method, it's only for internal use.
+     *
+     * @return The {@link Logger} of the plugin
+     */
+    public static Logger logger() {
+        return PlusLibBukkit.getInstance().getLogger();
+    }
 
     /**
      * Gets the instance of the plugin.
@@ -35,14 +43,13 @@ public final class PlusLibBukkit extends JavaPlugin {
         return JavaPlugin.getPlugin(PlusLibBukkit.class);
     }
 
-    /**
-     * Gets the {@link Logger} of the plugin.
-     * Do not use this method, it's only for internal use.
-     *
-     * @return The {@link Logger} of the plugin
-     */
-    public static Logger logger() {
-        return PlusLibBukkit.getInstance().getLogger();
+    @Override
+    public void onDisable() {
+        Bukkit.getMessenger().unregisterIncomingPluginChannel(this, BUNGEE_CORD);
+        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, BUNGEE_CORD);
+
+        Bukkit.getMessenger().unregisterIncomingPluginChannel(this, PLUSMC_BUNGEE);
+        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, PLUSMC_BUNGEE);
     }
 
     @Override
@@ -64,21 +71,12 @@ public final class PlusLibBukkit extends JavaPlugin {
 
         DatabaseHandler.createInstance(config.section("Mongodb"));
 
-        if(Bukkit.getPluginManager().isPluginEnabled("voicechat")) {
+        if (Bukkit.getPluginManager().isPluginEnabled("voicechat")) {
             getLogger().info("VoiceChat detected, enabling VoiceChat support");
             PlusLibVoicechat.createInstance(config.section("VoiceChat"));
         }
 
         Bukkit.getPluginManager().registerEvents(new BukkitUtil.Listener(), this);
-    }
-
-    @Override
-    public void onDisable() {
-        Bukkit.getMessenger().unregisterIncomingPluginChannel(this, BUNGEE_CORD);
-        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, BUNGEE_CORD);
-
-        Bukkit.getMessenger().unregisterIncomingPluginChannel(this, PLUSMC_BUNGEE);
-        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this, PLUSMC_BUNGEE);
     }
 
 

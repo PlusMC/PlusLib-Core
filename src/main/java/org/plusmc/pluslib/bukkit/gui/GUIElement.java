@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class GUIElement {
-    private ItemStack item;
     private final Consumer<InventoryClickEvent> action;
+    private ItemStack item;
 
     public GUIElement(ItemStack item, Consumer<InventoryClickEvent> action) {
         this.item = item;

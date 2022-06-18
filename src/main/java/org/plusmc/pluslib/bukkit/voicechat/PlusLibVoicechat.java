@@ -19,18 +19,13 @@ import java.util.*;
 
 public class PlusLibVoicechat implements VoicechatPlugin {
     private static PlusLibVoicechat instance;
-    @ConfigEntry private boolean useVoiceChat;
-    @ConfigEntry private boolean keepAudioLoaded;
-
-    private VoicechatServerApi api;
     private final List<PlusSound> queue;
-
     private final Map<String, ShortBuffer> loadedSounds;
-
-    public static File getSoundsFolder() {
-        return new File("pluginSounds");
-    }
-
+    @ConfigEntry
+    private boolean useVoiceChat;
+    @ConfigEntry
+    private boolean keepAudioLoaded;
+    private VoicechatServerApi api;
 
     private PlusLibVoicechat() {
         loadedSounds = new HashMap<>();
@@ -39,16 +34,15 @@ public class PlusLibVoicechat implements VoicechatPlugin {
 
     public static void createInstance(IConfig config) {
 
-        if(getSoundsFolder().mkdir())
+        if (getSoundsFolder().mkdir())
             PlusLibBukkit.getInstance().getLogger().info("Created Sound Folder");
         else PlusLibBukkit.getInstance().getLogger().severe("Could Not Create Sound Folder");
 
 
-        if(instance != null) {
+        if (instance != null) {
             PlusLibBukkit.getInstance().getLogger().warning("Voicechat Plugin is already initialized!");
             return;
         }
-
 
 
         BukkitVoicechatService service = Bukkit.getServicesManager().load(BukkitVoicechatService.class);
@@ -56,12 +50,12 @@ public class PlusLibVoicechat implements VoicechatPlugin {
             PlusLibBukkit.getInstance().getLogger().info("Registering Voicechat Plugin...");
             instance = new PlusLibVoicechat();
             config.writeIntoObject(instance);
-            if(!instance.useVoiceChat) {
+            if (!instance.useVoiceChat) {
                 PlusLibBukkit.getInstance().getLogger().info("Voicechat Plugin is disabled in config!");
                 return;
             }
 
-            if(!getSoundsFolder().exists() && !getSoundsFolder().mkdir()) {
+            if (!getSoundsFolder().exists() && !getSoundsFolder().mkdir()) {
                 PlusLibBukkit.getInstance().getLogger().warning("Could not create sounds folder!");
             }
 
@@ -69,37 +63,17 @@ public class PlusLibVoicechat implements VoicechatPlugin {
         }
     }
 
+    public static File getSoundsFolder() {
+        return new File("pluginSounds");
+    }
+
     public static boolean isEnabled() {
         return instance != null && instance.useVoiceChat;
     }
 
-
-    public void loadSound(PlusSound sound) {
-        if(!useVoiceChat) {
-            return;
-        }
-
-        if(api == null) {
-            queue.add(sound);
-            return;
-        }
-
-        File file = new File(getSoundsFolder(), sound.path());
-        if(!file.exists()) {
-            PlusLibBukkit.logger().warning("Sound file " + file.getName() + " does not exist!");
-            return;
-        }
-
-        if(!file.getName().endsWith(".wav")) {
-            PlusLibBukkit.logger().warning("Sound file " + file.getName() + " is not a wav file!");
-            return;
-        }
-
-        ShortBuffer buffer = ShortBuffer.wrap(bytesToShorts(FileUtil.readData(file)));
-        loadedSounds.put(sound.name(), buffer);
-        PlusLibBukkit.logger().info("Loaded sound " + sound.name());
+    public static PlusLibVoicechat getInstance() {
+        return instance;
     }
-
 
     public AudioPlayer createAudioPlayer(org.bukkit.entity.Player player, PlusSound sound) {
 
@@ -112,22 +86,14 @@ public class PlusLibVoicechat implements VoicechatPlugin {
         return api.createAudioPlayer(channel, encoder, loadedSounds.get(sound.name()).array());
     }
 
-    private short[] bytesToShorts(byte[] bytes) {
-        short[] shorts = new short[bytes.length / 2];
-        for (int i = 0; i < shorts.length; i++) {
-            shorts[i] = (short) ((bytes[i * 2] & 0xff) | (bytes[i * 2 + 1] << 8));
-        }
-        return shorts;
-    }
-
-
-    public static PlusLibVoicechat getInstance() {
-        return instance;
-    }
-
     @Override
     public String getPluginId() {
         return "pluslib";
+    }
+
+    @Override
+    public void initialize(VoicechatApi api) {
+        PlusLibBukkit.logger().info("Initialized Voicechat Plugin!");
     }
 
     @Override
@@ -142,13 +108,39 @@ public class PlusLibVoicechat implements VoicechatPlugin {
         PlusLibBukkit.logger().info("Voicechat plugin started!");
     }
 
-    @Override
-    public void initialize(VoicechatApi api) {
-        PlusLibBukkit.logger().info("Initialized Voicechat Plugin!");
+    public void loadSound(PlusSound sound) {
+        if (!useVoiceChat) {
+            return;
+        }
+
+        if (api == null) {
+            queue.add(sound);
+            return;
+        }
+
+        File file = new File(getSoundsFolder(), sound.path());
+        if (!file.exists()) {
+            PlusLibBukkit.logger().warning("Sound file " + file.getName() + " does not exist!");
+            return;
+        }
+
+        if (!file.getName().endsWith(".wav")) {
+            PlusLibBukkit.logger().warning("Sound file " + file.getName() + " is not a wav file!");
+            return;
+        }
+
+        ShortBuffer buffer = ShortBuffer.wrap(bytesToShorts(FileUtil.readData(file)));
+        loadedSounds.put(sound.name(), buffer);
+        PlusLibBukkit.logger().info(() -> "Loaded sound {}" + sound.name());
     }
 
-
-
+    private short[] bytesToShorts(byte[] bytes) {
+        short[] shorts = new short[bytes.length / 2];
+        for (int i = 0; i < shorts.length; i++) {
+            shorts[i] = (short) ((bytes[i * 2] & 0xff) | (bytes[i * 2 + 1] << 8));
+        }
+        return shorts;
+    }
 
 
 }

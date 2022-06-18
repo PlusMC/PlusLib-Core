@@ -1,7 +1,6 @@
 package org.plusmc.pluslib.reflect.bungeespigot;
 
 
-
 import org.plusmc.pluslib.bukkit.PlusLibBukkit;
 import org.plusmc.pluslib.bungee.PlusLibBungee;
 
@@ -17,28 +16,11 @@ public abstract class BungeeSpigotReflection {
     }
 
 
-    public static Logger getLogger(){
-        if(isBukkit()) {
+    public static Logger getLogger() {
+        if (isBukkit()) {
             return PlusLibBukkit.logger();
-        } else if(isBungee()) {
+        } else if (isBungee()) {
             return PlusLibBungee.logger();
-        }
-        return null;
-    }
-
-    public static Object getPlayer(UUID uuid) {
-        try {
-            if (isBukkit()) {
-                Class<?> bukkit = Class.forName(BUKKIT);
-                return bukkit.getDeclaredMethod("getPlayer", UUID.class).invoke(null, uuid);
-            } else if (isBungee()) {
-                Class<?> bungee = Class.forName(PROXY_SERVER);
-                Object proxy = bungee.getDeclaredMethod("getInstance").invoke(null);
-                return bungee.getDeclaredMethod("getPlayer", UUID.class).invoke(proxy, uuid);
-            }
-            return null;
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
         return null;
     }
@@ -61,6 +43,22 @@ public abstract class BungeeSpigotReflection {
         }
     }
 
+    public static Object getPlayer(UUID uuid) {
+        try {
+            if (isBukkit()) {
+                Class<?> bukkit = Class.forName(BUKKIT);
+                return bukkit.getDeclaredMethod("getPlayer", UUID.class).invoke(null, uuid);
+            } else if (isBungee()) {
+                Class<?> bungee = Class.forName(PROXY_SERVER);
+                Object proxy = bungee.getDeclaredMethod("getInstance").invoke(null);
+                return bungee.getDeclaredMethod("getPlayer", UUID.class).invoke(proxy, uuid);
+            }
+            return null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 
     public static void runAsync(Runnable runnable) {
         try {

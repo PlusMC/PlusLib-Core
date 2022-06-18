@@ -6,7 +6,8 @@ import org.plusmc.pluslib.bukkit.managed.Tickable;
 import org.plusmc.pluslib.bukkit.managing.BaseManager;
 import org.plusmc.pluslib.bukkit.managing.TickingManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoardHandler implements Tickable {
     private final List<PlusBoard> boards = new ArrayList<>();

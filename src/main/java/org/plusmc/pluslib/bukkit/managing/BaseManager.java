@@ -23,10 +23,6 @@ public abstract class BaseManager {
         MANAGERS.add(this);
     }
 
-    protected abstract void init();
-
-    protected abstract void shutdown();
-
     @Nullable
     public static <T extends BaseManager> T createManager(Class<T> manager, JavaPlugin plugin) {
         T obj = BaseManager.getManager(plugin, manager);
@@ -46,6 +42,22 @@ public abstract class BaseManager {
         return obj;
     }
 
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public static <T extends BaseManager> T getManager(JavaPlugin plugin, Class<T> manager) {
+        for (BaseManager m : MANAGERS)
+            if (m.getClass().equals(manager) && m.getPlugin().equals(plugin))
+                return (T) m;
+
+        return null;
+    }
+
+    protected abstract void init();
+
+    JavaPlugin getPlugin() {
+        return plugin;
+    }
+
     /**
      * Registers all the objects to their respectable manager.
      *
@@ -59,9 +71,13 @@ public abstract class BaseManager {
                 registered = true;
             }
         }
-        if(registered)
+        if (registered)
             object.load();
     }
+
+    abstract Class<? extends Loadable> getManaged();
+
+    abstract void register(Loadable loadable);
 
     public static void unregisterAny(Loadable object, JavaPlugin plugin) {
         for (BaseManager manager : MANAGERS)
@@ -70,15 +86,7 @@ public abstract class BaseManager {
 
     }
 
-    @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T extends BaseManager> T getManager(JavaPlugin plugin, Class<T> manager) {
-        for (BaseManager m : MANAGERS)
-            if (m.getClass().equals(manager) && m.getPlugin().equals(plugin))
-                return (T) m;
-
-        return null;
-    }
+    abstract void unregister(Loadable loadable);
 
     public static List<BaseManager> getAllManagers() {
         return new ArrayList<>(MANAGERS);
@@ -90,13 +98,5 @@ public abstract class BaseManager {
                 manager.shutdown();
     }
 
-    abstract Class<? extends Loadable> getManaged();
-
-    abstract void register(Loadable loadable);
-
-    abstract void unregister(Loadable loadable);
-
-    JavaPlugin getPlugin() {
-        return plugin;
-    }
+    protected abstract void shutdown();
 }

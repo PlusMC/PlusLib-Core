@@ -2,18 +2,18 @@ package org.plusmc.pluslib.reflect.bungeespigot.player;
 
 import org.bukkit.entity.Player;
 
-public class PlayerSpigot implements IPlayer{
+public class PlayerSpigot implements IPlayer {
 
     private final Player player;
 
-    protected PlayerSpigot(Object player){
-        if(!(player instanceof Player p))
+    protected PlayerSpigot(Object player) {
+        if (!(player instanceof Player p))
             throw new IllegalArgumentException("Player is not a Player");
         this.player = p;
     }
 
     @Override
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         player.sendMessage(message);
     }
 

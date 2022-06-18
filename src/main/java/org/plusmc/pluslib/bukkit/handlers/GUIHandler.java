@@ -18,7 +18,6 @@ public class GUIHandler {
     }
 
 
-
     private static void registerListener(JavaPlugin plugin) {
         if (!registered)
             Bukkit.getPluginManager().registerEvents(new InventoryListener(), plugin);

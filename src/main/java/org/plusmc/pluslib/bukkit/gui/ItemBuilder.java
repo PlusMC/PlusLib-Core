@@ -58,7 +58,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setSkullOwner(final OfflinePlayer owner) {
-        if(!(meta instanceof SkullMeta skullMeta)) {
+        if (!(meta instanceof SkullMeta skullMeta)) {
             throw new IllegalStateException("Cannot set skull owner on non-skull item");
         }
         skullMeta.setOwningPlayer(owner);

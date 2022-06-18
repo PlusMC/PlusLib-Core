@@ -27,7 +27,7 @@ public class ConfigBungee implements IConfig {
         this.section = null;
     }
 
-    public ConfigBungee( IConfig parent, Configuration configuration, String section) {
+    public ConfigBungee(IConfig parent, Configuration configuration, String section) {
         this.configuration = configuration;
         this.parent = parent;
         this.file = parent.getFile();
@@ -37,6 +37,13 @@ public class ConfigBungee implements IConfig {
     @Override
     public IConfig section(String section) {
         return new ConfigBungee(this, configuration.getSection(section), section);
+    }
+
+    @Override
+    public void set(String key, Object value) {
+        if (parent != null)
+            parent.set(section + "." + key, value);
+        else configuration.set(key, value);
     }
 
     @Override
@@ -50,15 +57,8 @@ public class ConfigBungee implements IConfig {
     }
 
     @Override
-    public void set(String key, Object value) {
-        if(parent != null)
-            parent.set(section + "." + key, value);
-        else configuration.set(key, value);
-    }
-
-    @Override
     public void save() throws IOException {
-        if(parent == null)
+        if (parent == null)
             ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, file);
         else parent.save();
     }

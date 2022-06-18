@@ -35,6 +35,13 @@ public class ConfigSpigot implements IConfig {
     }
 
     @Override
+    public void set(String key, Object value) {
+        if (configuration.getCurrentPath() != null)
+            fileConfiguration.set(configuration.getCurrentPath(), value);
+        else configuration.set(key, value);
+    }
+
+    @Override
     public Object get(String key) {
         return configuration.get(key);
     }
@@ -42,13 +49,6 @@ public class ConfigSpigot implements IConfig {
     @Override
     public File getFile() {
         return file;
-    }
-
-    @Override
-    public void set(String key, Object value) {
-        if(configuration.getCurrentPath() != null)
-            fileConfiguration.set(configuration.getCurrentPath(), value);
-        else configuration.set(key, value);
     }
 
     @Override

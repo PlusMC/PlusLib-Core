@@ -8,7 +8,7 @@ public class PlayerBungee implements IPlayer {
 
 
     protected PlayerBungee(Object player) {
-        if(!(player instanceof ProxiedPlayer proxiedPlayer))
+        if (!(player instanceof ProxiedPlayer proxiedPlayer))
             throw new IllegalArgumentException("Player must be a ProxiedPlayer");
         this.player = proxiedPlayer;
     }

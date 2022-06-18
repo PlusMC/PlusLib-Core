@@ -10,7 +10,6 @@ import org.plusmc.pluslib.bukkit.managing.TickingManager;
 public interface Tickable extends Loadable {
 
 
-
     /**
      * The {@link TickingManager} will call this method for every tick.
      *

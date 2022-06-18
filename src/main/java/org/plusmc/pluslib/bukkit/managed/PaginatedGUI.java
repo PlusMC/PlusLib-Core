@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class PaginatedGUI extends PlusGUI {
-    private int page = 0;
     private final Map<Integer, Map<Integer, GUIElement>> pages;
+    private int page = 0;
 
 
     protected PaginatedGUI() {
@@ -17,10 +17,12 @@ public abstract class PaginatedGUI extends PlusGUI {
         draw();
     }
 
+    protected abstract void createPages();
+
     protected PaginatedGUI(boolean generate) {
         super(generate);
         this.pages = new HashMap<>();
-        if(generate) {
+        if (generate) {
             createPages();
             draw();
         }
@@ -32,8 +34,6 @@ public abstract class PaginatedGUI extends PlusGUI {
         createPages();
         draw();
     }
-
-    protected abstract void createPages();
 
     public int getPageAmount() {
         return this.pages.size();

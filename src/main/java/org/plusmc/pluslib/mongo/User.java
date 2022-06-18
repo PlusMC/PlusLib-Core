@@ -38,21 +38,15 @@ public class User {
     private IPlayer player;
 
     @Embedded
-    private UserMH userMH;
+    private UserSR userSR;
 
     public User() {
-    }
-
-    public IPlayer getPlayer() {
-        if(this.player == null)
-            this.player = IPlayer.getPlayer(UUID.fromString(this.uuid));
-        return this.player;
     }
 
     public User(String uuid, String name, boolean newUser) {
         this.name = name;
         this.uuid = uuid;
-        if(newUser) {
+        if (newUser) {
             this.firstLogin = System.currentTimeMillis();
             this.lastLogin = System.currentTimeMillis();
             this.pointsForNextLevel = 100;
@@ -76,18 +70,24 @@ public class User {
             this.pointsForNextLevel += this.pointsForNextLevel * 0.75;
             this.level++;
         }
-        if(oldLevel < this.level) {
+        if (oldLevel < this.level) {
             String message = "§6§lLevel Up! " + oldLevel + " -> " + this.level;
             this.getPlayer().sendMessage(message);
         }
     }
 
-    public void setTimeZone(TimeZone timeZone) {
-        this.timeZone = timeZone.getID();
+    public IPlayer getPlayer() {
+        if (this.player == null)
+            this.player = IPlayer.getPlayer(UUID.fromString(this.uuid));
+        return this.player;
     }
 
     public TimeZone getTimeZone() {
         return TimeZone.getTimeZone(this.timeZone);
+    }
+
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone.getID();
     }
 
     public void addPoints(long points, String reason) {
@@ -100,7 +100,7 @@ public class User {
         }
         String pointMessage = reason + "§6§l +" + points + " Brownie Points!";
         this.getPlayer().sendMessage(pointMessage);
-        if(oldLevel < this.level) {
+        if (oldLevel < this.level) {
             String levelUpMessage = "§6§lLevel Up! " + oldLevel + " -> " + this.level;
             this.getPlayer().sendMessage(levelUpMessage);
             this.getPlayer().playSound("entity.player.levelup", 1.0F, 2.0F);
@@ -141,11 +141,11 @@ public class User {
         this.banTime = 0;
     }
 
-    public UserMH getUserMH() {
-        if(this.userMH == null)
-            this.userMH = new UserMH();
+    public UserSR getUserMH() {
+        if (this.userSR == null)
+            this.userSR = new UserSR();
 
-        return this.userMH;
+        return this.userSR;
     }
 
     public boolean isBanned() {
@@ -185,15 +185,13 @@ public class User {
         return this.firstLogin;
     }
 
-    public void setLastLogin(long lastLogin) {
-        this.lastLogin = lastLogin;
-    }
-
     public long getLastLogin() {
         return this.lastLogin;
     }
 
-
+    public void setLastLogin(long lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 
 
 }

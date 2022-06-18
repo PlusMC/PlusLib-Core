@@ -41,15 +41,6 @@ public class PlusItemManager extends BaseManager {
     }
 
     /**
-     * Gets the list of all PlusItems.
-     *
-     * @return The list of all PlusItems.
-     */
-    public List<PlusItem> getPlusItems() {
-        return new ArrayList<>(plusItems);
-    }
-
-    /**
      * Checks if the item is a plus item.
      *
      * @param stack The item to check.
@@ -62,6 +53,15 @@ public class PlusItemManager extends BaseManager {
         if (!stack.getItemMeta().getPersistentDataContainer().has(itemKey, PersistentDataType.STRING))
             return false;
         return Objects.equals(stack.getItemMeta().getPersistentDataContainer().get(itemKey, PersistentDataType.STRING), id);
+    }
+
+    /**
+     * Gets the list of all PlusItems.
+     *
+     * @return The list of all PlusItems.
+     */
+    public List<PlusItem> getPlusItems() {
+        return new ArrayList<>(plusItems);
     }
 
     /**
@@ -94,6 +94,16 @@ public class PlusItemManager extends BaseManager {
         return null;
     }
 
+    @Override
+    protected void init() {
+        Bukkit.getPluginManager().registerEvents(new Listener(), this.getPlugin());
+        plusItems = new ArrayList<>();
+    }
+
+    @Override
+    public Class<? extends Loadable> getManaged() {
+        return PlusItem.class;
+    }
 
     /**
      * Registers a {@link PlusItem}.
@@ -121,13 +131,6 @@ public class PlusItemManager extends BaseManager {
         PlusLibBukkit.logger().info("Unregistered PlusItem: " + pItem.getID());
     }
 
-
-    @Override
-    protected void init() {
-        Bukkit.getPluginManager().registerEvents(new Listener(), this.getPlugin());
-        plusItems = new ArrayList<>();
-    }
-
     @Override
     protected void shutdown() {
         for (Iterator<PlusItem> iterator = plusItems.iterator(); iterator.hasNext(); ) {
@@ -136,11 +139,6 @@ public class PlusItemManager extends BaseManager {
             unregister(item);
         }
         plusItems.clear();
-    }
-
-    @Override
-    public Class<? extends Loadable> getManaged() {
-        return PlusItem.class;
     }
 
     private class Listener implements org.bukkit.event.Listener {

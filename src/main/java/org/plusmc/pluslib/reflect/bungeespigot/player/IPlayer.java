@@ -7,7 +7,7 @@ import java.util.UUID;
 public interface IPlayer {
 
     static IPlayer getPlayer(UUID uuid) {
-        if(BungeeSpigotReflection.isBungee()) {
+        if (BungeeSpigotReflection.isBungee()) {
             return new PlayerBungee(BungeeSpigotReflection.getPlayer(uuid));
         } else if (BungeeSpigotReflection.isBukkit()) {
             return new PlayerSpigot(BungeeSpigotReflection.getPlayer(uuid));

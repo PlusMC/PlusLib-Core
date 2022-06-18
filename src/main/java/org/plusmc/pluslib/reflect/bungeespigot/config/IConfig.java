@@ -32,15 +32,15 @@ public interface IConfig {
         }
     }
 
-    Object get(String key);
+    void set(String key, Object value);
 
     default void writeIntoObject(Object obj) {
         try {
-            for(Field field : obj.getClass().getDeclaredFields()) {
-                if(!field.isAnnotationPresent(ConfigEntry.class))
+            for (Field field : obj.getClass().getDeclaredFields()) {
+                if (!field.isAnnotationPresent(ConfigEntry.class))
                     continue;
-                if(Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
-                    if(BungeeSpigotReflection.getLogger() != null)
+                if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
+                    if (BungeeSpigotReflection.getLogger() != null)
                         BungeeSpigotReflection.getLogger().warning("Cannot read field " + field.getName() + " in " + obj.getClass().getName() + " because it is final or static");
                     continue;
                 }
@@ -55,10 +55,9 @@ public interface IConfig {
         }
     }
 
+    Object get(String key);
+
     File getFile();
-
-
-    void set(String key, Object value);
 
     void save() throws IOException;
 }

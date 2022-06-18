@@ -7,11 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.plusmc.pluslib.bukkit.gui.GUIElement;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class PlusGUI implements Loadable, InventoryHolder {
     private final Map<Integer, GUIElement> elements;
-    @NotNull private Inventory inventory;
+    @NotNull
+    private Inventory inventory;
 
     protected PlusGUI(boolean generate) {
         this.elements = new HashMap<>();
@@ -19,6 +22,19 @@ public abstract class PlusGUI implements Loadable, InventoryHolder {
             inventory = this.createInventory();
             draw();
         } else inventory = Bukkit.createInventory(this, 9, "Placeholder");
+    }
+
+    protected abstract Inventory createInventory();
+
+    public void draw() {
+        this.getInventory().clear();
+        for (final Map.Entry<Integer, GUIElement> entry : this.elements.entrySet()) {
+            this.getInventory().setItem(entry.getKey(), entry.getValue().getItem());
+        }
+    }
+
+    public @NotNull Inventory getInventory() {
+        return this.inventory;
     }
 
     protected PlusGUI() {
@@ -36,12 +52,10 @@ public abstract class PlusGUI implements Loadable, InventoryHolder {
         return this.elements.values();
     }
 
-    public @NotNull Inventory getInventory() {
-        return this.inventory;
+    protected void setElements(final Map<Integer, GUIElement> elements) {
+        this.elements.clear();
+        this.elements.putAll(elements);
     }
-
-
-    protected abstract Inventory createInventory();
 
     public void setElement(final GUIElement element, final int index) {
         this.elements.put(index, element);
@@ -63,17 +77,5 @@ public abstract class PlusGUI implements Loadable, InventoryHolder {
 
     public void clearElements() {
         this.elements.clear();
-    }
-
-    protected void setElements(final Map<Integer, GUIElement> elements) {
-        this.elements.clear();
-        this.elements.putAll(elements);
-    }
-
-    public void draw() {
-        this.getInventory().clear();
-        for (final Map.Entry<Integer, GUIElement> entry : this.elements.entrySet()) {
-            this.getInventory().setItem(entry.getKey(), entry.getValue().getItem());
-        }
     }
 }
