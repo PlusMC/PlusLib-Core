@@ -15,7 +15,7 @@ public class User {
     @Indexed
     private String name;
     @Indexed
-    private long discordId;
+    private long discordId = -1;
     @Indexed
     private String discordName;
 
@@ -192,6 +192,4 @@ public class User {
     public void setLastLogin(long lastLogin) {
         this.lastLogin = lastLogin;
     }
-
-
 }
