@@ -171,6 +171,16 @@ public class DatabaseHandler {
         return null;
     }
 
+    @Nullable
+    public User getUserFromCache(String name) {
+        if (!isLoaded())
+            return null;
+        for (User user : cachedUsers) {
+            if (user.getName().equals(name)) return user;
+        }
+        return null;
+    }
+
     public User getUserSync(UUID uuid) {
         return getUser(uuid);
     }

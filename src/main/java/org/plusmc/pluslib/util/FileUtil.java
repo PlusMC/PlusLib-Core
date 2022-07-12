@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.bukkit.util;
+package org.plusmc.pluslib.util;
 
 import java.io.File;
 import java.io.FileInputStream;

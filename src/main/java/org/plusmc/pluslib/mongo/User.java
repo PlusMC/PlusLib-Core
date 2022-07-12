@@ -1,8 +1,8 @@
 package org.plusmc.pluslib.mongo;
 
 import org.mongodb.morphia.annotations.*;
-import org.plusmc.pluslib.mongo.util.TimeFormatter;
 import org.plusmc.pluslib.reflect.bungeespigot.player.IPlayer;
+import org.plusmc.pluslib.util.StringFormatter;
 
 import java.util.TimeZone;
 import java.util.UUID;
@@ -132,7 +132,7 @@ public class User {
         this.banReason = reason;
         this.banTime = time + System.currentTimeMillis();
         String reasonMessage = reason.isBlank() ? "" : ", Reason: " + reason;
-        String message = "§cYou've been banned for " + TimeFormatter.formatTime(time) + reasonMessage;
+        String message = "§cYou've been banned for " + StringFormatter.formatTime(time) + reasonMessage;
         this.getPlayer().kickPlayer(message);
     }
 

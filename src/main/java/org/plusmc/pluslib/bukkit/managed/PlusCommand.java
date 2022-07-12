@@ -18,6 +18,24 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface PlusCommand extends CommandExecutor, TabCompleter, Loadable {
     /**
+     * Gets the permission required to use this command.
+     *
+     * @return Permission required to use this command
+     */
+    default String getPermission() {
+        return null;
+    }
+
+    /**
+     * Gets the usage of this command.
+     *
+     * @return Usage of this command
+     */
+    default String getUsage() {
+        return "/" + getName();
+    }
+
+    /**
      * Gets the command name.
      *
      * @return Command name
@@ -25,25 +43,13 @@ public interface PlusCommand extends CommandExecutor, TabCompleter, Loadable {
     String getName();
 
     /**
-     * Gets the permission required to use this command.
-     *
-     * @return Permission required to use this command
-     */
-    String getPermission();
-
-    /**
-     * Gets the usage of this command.
-     *
-     * @return Usage of this command
-     */
-    String getUsage();
-
-    /**
      * Gets the description of this command.
      *
      * @return Description of this command
      */
-    String getDescription();
+    default String getDescription() {
+        return "";
+    }
 
     @Override
     default List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
@@ -77,5 +83,7 @@ public interface PlusCommand extends CommandExecutor, TabCompleter, Loadable {
      * @param index Index of the current argument
      * @return Completions of the command
      */
-    List<String> getCompletions(int index);
+    default List<String> getCompletions(int index) {
+        return new ArrayList<>();
+    }
 }
