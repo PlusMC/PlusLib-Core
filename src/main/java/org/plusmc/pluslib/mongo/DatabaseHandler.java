@@ -146,7 +146,7 @@ public class DatabaseHandler {
      * @return a list of all users in the cache.
      */
     public List<User> getUserCache() {
-        if (!isLoaded())
+        if (!isLoaded() || cachedUsers == null)
             return Collections.emptyList();
         return Collections.unmodifiableList(cachedUsers);
     }
