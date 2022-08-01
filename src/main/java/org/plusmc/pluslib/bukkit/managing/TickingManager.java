@@ -89,8 +89,8 @@ public class TickingManager extends BaseManager {
     @Override
     protected void register(Loadable loadable) {
         if (!(loadable instanceof Tickable tickable)) return;
-        tickables.add(new HashMap.SimpleEntry<>(tickable, ITimings.create(getPlugin(), tickable.getClass().getSimpleName() + " (tickable)")));
-        getPlugin().getLogger().info("Registered " + tickable.getClass().getSimpleName() + " to the ticking manager.");
+        tickables.add(new HashMap.SimpleEntry<>(tickable, ITimings.create(getPlugin(), tickable.getName() + "-(tickable)")));
+        getPlugin().getLogger().info("Registered " + tickable.getName() + " to the ticking manager.");
     }
 
     @Override
