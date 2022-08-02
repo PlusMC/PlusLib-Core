@@ -1,8 +1,9 @@
 package org.plusmc.pluslib.mongo;
 
+import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.annotations.*;
-import org.plusmc.pluslib.mongo.util.TimeFormatter;
 import org.plusmc.pluslib.reflect.bungeespigot.player.IPlayer;
+import org.plusmc.pluslib.util.StringFormatter;
 
 import java.util.TimeZone;
 import java.util.UUID;
@@ -72,13 +73,20 @@ public class User {
         }
         if (oldLevel < this.level) {
             String message = "§6§lLevel Up! " + oldLevel + " -> " + this.level;
-            this.getPlayer().sendMessage(message);
+            if (this.getPlayer() != null) {
+                this.getPlayer().sendMessage(message);
+            }
         }
     }
 
+    @Nullable
     public IPlayer getPlayer() {
-        if (this.player == null)
-            this.player = IPlayer.getPlayer(UUID.fromString(this.uuid));
+        try {
+            if (this.player == null)
+                this.player = IPlayer.getPlayer(UUID.fromString(this.uuid));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
         return this.player;
     }
 
@@ -99,11 +107,15 @@ public class User {
             this.level++;
         }
         String pointMessage = reason + "§6§l +" + points + " Brownie Points!";
-        this.getPlayer().sendMessage(pointMessage);
+        if (this.getPlayer() != null)
+            this.getPlayer().sendMessage(pointMessage);
+
         if (oldLevel < this.level) {
             String levelUpMessage = "§6§lLevel Up! " + oldLevel + " -> " + this.level;
-            this.getPlayer().sendMessage(levelUpMessage);
-            this.getPlayer().playSound("entity.player.levelup", 1.0F, 2.0F);
+            if (this.getPlayer() != null) {
+                this.getPlayer().sendMessage(levelUpMessage);
+                this.getPlayer().playSound("entity.player.levelup", 1.0F, 2.0F);
+            }
         }
     }
 
@@ -132,8 +144,9 @@ public class User {
         this.banReason = reason;
         this.banTime = time + System.currentTimeMillis();
         String reasonMessage = reason.isBlank() ? "" : ", Reason: " + reason;
-        String message = "§cYou've been banned for " + TimeFormatter.formatTime(time) + reasonMessage;
-        this.getPlayer().kickPlayer(message);
+        String message = "§cYou've been banned for " + StringFormatter.formatTime(time) + reasonMessage;
+        if (this.getPlayer() != null)
+            this.getPlayer().kickPlayer(message);
     }
 
     public void unban() {

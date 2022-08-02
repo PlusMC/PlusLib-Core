@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.plusmc.pluslib.bukkit.managed.Loadable;
 import org.plusmc.pluslib.bukkit.managed.Tickable;
-import org.plusmc.pluslib.reflect.spigot.timings.ITimings;
+import org.plusmc.pluslib.reflect.spigotpaper.timings.ITimings;
 
 import java.util.*;
 
@@ -89,8 +89,8 @@ public class TickingManager extends BaseManager {
     @Override
     protected void register(Loadable loadable) {
         if (!(loadable instanceof Tickable tickable)) return;
-        tickables.add(new HashMap.SimpleEntry<>(tickable, ITimings.create(getPlugin(), tickable.getClass().getSimpleName() + " (tickable)")));
-        getPlugin().getLogger().info("Registered " + tickable.getClass().getSimpleName() + " to the ticking manager.");
+        tickables.add(new HashMap.SimpleEntry<>(tickable, ITimings.create(getPlugin(), tickable.getName() + "-(tickable)")));
+        getPlugin().getLogger().info("Registered " + tickable.getName() + " to the ticking manager.");
     }
 
     @Override

@@ -1,8 +1,8 @@
-package org.plusmc.pluslib.mongo.util;
+package org.plusmc.pluslib.util;
 
-public class TimeFormatter {
+public class StringFormatter {
 
-    private TimeFormatter() {
+    private StringFormatter() {
         throw new IllegalStateException("Utility class");
     }
 

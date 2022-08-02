@@ -71,6 +71,11 @@ public final class PlusLibBukkit extends JavaPlugin {
 
         DatabaseHandler.createInstance(config.section("Mongodb"));
 
+        Bukkit.getScheduler().runTaskTimer(this, () -> {
+            if (DatabaseHandler.getInstance() != null && DatabaseHandler.getInstance().isLoaded())
+                DatabaseHandler.getInstance().updateCache();
+        }, 600, 600);
+
         if (Bukkit.getPluginManager().isPluginEnabled("voicechat")) {
             getLogger().info("VoiceChat detected, enabling VoiceChat support");
             PlusLibVoicechat.createInstance(config.section("VoiceChat"));

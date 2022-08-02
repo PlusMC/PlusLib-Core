@@ -146,7 +146,7 @@ public class DatabaseHandler {
      * @return a list of all users in the cache.
      */
     public List<User> getUserCache() {
-        if (!isLoaded())
+        if (!isLoaded() || cachedUsers == null)
             return Collections.emptyList();
         return Collections.unmodifiableList(cachedUsers);
     }
@@ -167,6 +167,16 @@ public class DatabaseHandler {
             if (user.getUUID().equals(uuid)) {
                 return user;
             }
+        }
+        return null;
+    }
+
+    @Nullable
+    public User getUserFromCache(String name) {
+        if (!isLoaded())
+            return null;
+        for (User user : cachedUsers) {
+            if (user.getName().equals(name)) return user;
         }
         return null;
     }
