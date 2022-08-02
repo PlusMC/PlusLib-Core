@@ -1,7 +1,7 @@
-package org.plusmc.pluslib.reflect.spigotpaper.timings;
+package org.plusmc.pluslibcore.reflect.spigotpaper.timings;
 
 import org.bukkit.plugin.Plugin;
-import org.plusmc.pluslib.reflect.spigotpaper.PaperSpigotReflection;
+import org.plusmc.pluslibcore.reflect.spigotpaper.PaperSpigotReflection;
 
 public interface ITimings {
     static ITimings create(Plugin plugin, String name) {

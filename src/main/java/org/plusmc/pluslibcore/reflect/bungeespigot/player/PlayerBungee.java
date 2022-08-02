@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.reflect.bungeespigot.player;
+package org.plusmc.pluslibcore.reflect.bungeespigot.player;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.util;
+package org.plusmc.pluslibcore.util;
 
 import java.io.File;
 import java.io.FileInputStream;

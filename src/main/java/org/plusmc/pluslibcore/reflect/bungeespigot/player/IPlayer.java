@@ -1,6 +1,6 @@
-package org.plusmc.pluslib.reflect.bungeespigot.player;
+package org.plusmc.pluslibcore.reflect.bungeespigot.player;
 
-import org.plusmc.pluslib.reflect.bungeespigot.BungeeSpigotReflection;
+import org.plusmc.pluslibcore.reflect.bungeespigot.BungeeSpigotReflection;
 
 import java.util.UUID;
 

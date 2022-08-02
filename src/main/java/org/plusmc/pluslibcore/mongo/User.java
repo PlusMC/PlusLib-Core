@@ -1,9 +1,9 @@
-package org.plusmc.pluslib.mongo;
+package org.plusmc.pluslibcore.mongo;
 
 import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.annotations.*;
-import org.plusmc.pluslib.reflect.bungeespigot.player.IPlayer;
-import org.plusmc.pluslib.util.StringFormatter;
+import org.plusmc.pluslibcore.reflect.bungeespigot.player.IPlayer;
+import org.plusmc.pluslibcore.util.StringFormatter;
 
 import java.util.TimeZone;
 import java.util.UUID;

@@ -1,6 +1,6 @@
-package org.plusmc.pluslib.reflect.bungeespigot.config;
+package org.plusmc.pluslibcore.reflect.bungeespigot.config;
 
-import org.plusmc.pluslib.reflect.bungeespigot.BungeeSpigotReflection;
+import org.plusmc.pluslibcore.reflect.bungeespigot.BungeeSpigotReflection;
 
 import java.io.File;
 import java.io.IOException;

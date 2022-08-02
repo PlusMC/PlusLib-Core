@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.reflect.spigotpaper;
+package org.plusmc.pluslibcore.reflect.spigotpaper;
 
 public interface PaperSpigotReflection {
 

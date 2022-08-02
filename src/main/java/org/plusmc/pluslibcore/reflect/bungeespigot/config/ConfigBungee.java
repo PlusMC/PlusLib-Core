@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.reflect.bungeespigot.config;
+package org.plusmc.pluslibcore.reflect.bungeespigot.config;
 
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;

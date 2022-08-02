@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.mongo;
+package org.plusmc.pluslibcore.mongo;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
@@ -7,9 +7,9 @@ import com.mongodb.ServerAddress;
 import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
-import org.plusmc.pluslib.reflect.bungeespigot.BungeeSpigotReflection;
-import org.plusmc.pluslib.reflect.bungeespigot.config.ConfigEntry;
-import org.plusmc.pluslib.reflect.bungeespigot.config.IConfig;
+import org.plusmc.pluslibcore.reflect.bungeespigot.BungeeSpigotReflection;
+import org.plusmc.pluslibcore.reflect.bungeespigot.config.ConfigEntry;
+import org.plusmc.pluslibcore.reflect.bungeespigot.config.IConfig;
 
 import java.util.Collections;
 import java.util.List;

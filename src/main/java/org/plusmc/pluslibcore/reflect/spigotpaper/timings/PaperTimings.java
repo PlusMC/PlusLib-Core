@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.reflect.spigotpaper.timings;
+package org.plusmc.pluslibcore.reflect.spigotpaper.timings;
 
 
 import org.bukkit.plugin.Plugin;

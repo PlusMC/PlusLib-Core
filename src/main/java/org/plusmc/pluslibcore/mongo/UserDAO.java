@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.mongo;
+package org.plusmc.pluslibcore.mongo;
 
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.dao.BasicDAO;

@@ -1,8 +1,8 @@
-package org.plusmc.pluslib.reflect.bungeespigot;
+package org.plusmc.pluslibcore.reflect.bungeespigot;
 
 
-import org.plusmc.pluslib.bukkit.PlusLibBukkit;
-import org.plusmc.pluslib.bungee.PlusLibBungee;
+import org.plusmc.pluslibcore.bukkit.PlusLibBukkit;
+import org.plusmc.pluslibcore.bungee.PlusLibBungee;
 
 import java.util.UUID;
 import java.util.logging.Logger;

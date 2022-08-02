@@ -1,4 +1,4 @@
-package org.plusmc.pluslib.util;
+package org.plusmc.pluslibcore.util;
 
 public class StringFormatter {
 
