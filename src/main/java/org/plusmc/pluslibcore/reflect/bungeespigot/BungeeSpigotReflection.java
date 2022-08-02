@@ -1,8 +1,6 @@
 package org.plusmc.pluslibcore.reflect.bungeespigot;
 
 
-import org.plusmc.pluslibcore.bukkit.PlusLibBukkit;
-import org.plusmc.pluslibcore.bungee.PlusLibBungee;
 
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -17,10 +15,28 @@ public abstract class BungeeSpigotReflection {
 
 
     public static Logger getLogger() {
-        if (isBukkit()) {
-            return PlusLibBukkit.logger();
-        } else if (isBungee()) {
-            return PlusLibBungee.logger();
+        try {
+            if (isBukkit()) {
+                Class<?> bukkitClass = Class.forName(BUKKIT);
+
+
+                Object pluginManager = bukkitClass.getMethod("getPluginManager").invoke(null);
+                Object pluginInstance = pluginManager.getClass().getMethod("getPlugin", String.class).invoke(pluginManager, "PlusLib");
+                Object logger = pluginInstance.getClass().getMethod("getLogger").invoke(pluginInstance);
+                return (Logger) logger;
+            } else if (isBungee()) {
+                Class<?> bungee = Class.forName(PROXY_SERVER);
+                Class<?> pluginClass = Class.forName("net.md_5.bungee.api.plugin.Plugin");
+                Object proxy = bungee.getDeclaredMethod("getInstance").invoke(null);
+                Object pluginManager = bungee.getDeclaredMethod("getPluginManager").invoke(proxy);
+
+                Object pluginInstance = pluginManager.getClass().getDeclaredMethod("getPlugin", String.class).invoke(pluginManager, "PlusLib");
+                Object logger = pluginInstance.getClass().getMethod("getLogger").invoke(pluginInstance);
+                return (Logger) logger;
+
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return null;
     }
@@ -65,16 +81,24 @@ public abstract class BungeeSpigotReflection {
             if (isBukkit()) {
                 Class<?> bukkitClass = Class.forName(BUKKIT);
                 Class<?> schedulerClass = Class.forName("org.bukkit.scheduler.BukkitScheduler");
+
                 Class<?> pluginClass = Class.forName("org.bukkit.plugin.Plugin");
+
                 Object scheduler = bukkitClass.getMethod("getScheduler").invoke(null);
-                schedulerClass.getMethod("runTaskAsynchronously", pluginClass, Runnable.class).invoke(scheduler, PlusLibBukkit.getInstance(), runnable);
+                Object pluginManager = bukkitClass.getMethod("getPluginManager").invoke(null);
+                Object pluginInstance = pluginManager.getClass().getMethod("getPlugin", String.class).invoke(pluginManager, "PlusLib");
+
+
+                schedulerClass.getMethod("runTaskAsynchronously", pluginClass, Runnable.class).invoke(scheduler, pluginInstance, runnable);
             } else if (isBungee()) {
                 Class<?> bungee = Class.forName(PROXY_SERVER);
                 Class<?> schedulerClass = Class.forName("net.md_5.bungee.api.scheduler.TaskScheduler");
                 Class<?> pluginClass = Class.forName("net.md_5.bungee.api.plugin.Plugin");
                 Object proxy = bungee.getDeclaredMethod("getInstance").invoke(null);
+                Object pluginManager = bungee.getDeclaredMethod("getPluginManager").invoke(proxy);
+                Object pluginInstance = pluginManager.getClass().getDeclaredMethod("getPlugin", String.class).invoke(pluginManager, "PlusLib");
                 Object scheduler = bungee.getDeclaredMethod("getScheduler").invoke(proxy);
-                schedulerClass.getMethod("runAsync", pluginClass, Runnable.class).invoke(scheduler, PlusLibBungee.getInstance(), runnable);
+                schedulerClass.getMethod("runAsync", pluginClass, Runnable.class).invoke(scheduler, pluginInstance, runnable);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
