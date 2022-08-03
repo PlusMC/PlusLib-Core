@@ -1,16 +1,20 @@
-package org.plusmc.pluslibcore.reflect.bungeespigot.player;
+package org.plusmc.pluslibcore.reflection.bungeebukkit.player;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-public class PlayerBungee implements IPlayer {
+public class WrappedPlayerBungee implements WrappedPlayer {
     private final ProxiedPlayer player;
 
 
-    protected PlayerBungee(Object player) {
+    protected WrappedPlayerBungee(Object player) {
         if (!(player instanceof ProxiedPlayer proxiedPlayer))
             throw new IllegalArgumentException("Player must be a ProxiedPlayer");
         this.player = proxiedPlayer;
+    }
+
+    public ProxiedPlayer getPlayerProxied() {
+        return player;
     }
 
     @Override

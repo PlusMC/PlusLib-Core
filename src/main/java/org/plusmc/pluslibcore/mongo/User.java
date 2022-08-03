@@ -2,7 +2,7 @@ package org.plusmc.pluslibcore.mongo;
 
 import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.annotations.*;
-import org.plusmc.pluslibcore.reflect.bungeespigot.player.IPlayer;
+import org.plusmc.pluslibcore.reflection.bungeebukkit.player.WrappedPlayer;
 import org.plusmc.pluslibcore.util.StringFormatter;
 
 import java.util.TimeZone;
@@ -36,7 +36,7 @@ public class User {
     private long banTime = 0;
 
     @Transient
-    private IPlayer player;
+    private WrappedPlayer player;
 
     @Embedded
     private UserSR userSR;
@@ -80,10 +80,10 @@ public class User {
     }
 
     @Nullable
-    public IPlayer getPlayer() {
+    public WrappedPlayer getPlayer() {
         try {
             if (this.player == null)
-                this.player = IPlayer.getPlayer(UUID.fromString(this.uuid));
+                this.player = WrappedPlayer.getPlayer(UUID.fromString(this.uuid));
         } catch (IllegalArgumentException e) {
             return null;
         }

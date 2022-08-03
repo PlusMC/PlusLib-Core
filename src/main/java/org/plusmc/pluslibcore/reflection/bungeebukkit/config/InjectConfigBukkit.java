@@ -1,4 +1,4 @@
-package org.plusmc.pluslibcore.reflect.bungeespigot.config;
+package org.plusmc.pluslibcore.reflection.bungeebukkit.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -7,19 +7,19 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class ConfigSpigot implements IConfig {
+public class InjectConfigBukkit implements InjectableConfig {
     private final ConfigurationSection configuration;
 
     private final File file;
     private final FileConfiguration fileConfiguration;
 
-    public ConfigSpigot(File file) {
+    public InjectConfigBukkit(File file) {
         this.file = file;
         this.fileConfiguration = YamlConfiguration.loadConfiguration(file);
         this.configuration = fileConfiguration;
     }
 
-    public ConfigSpigot(ConfigurationSection configuration, ConfigSpigot parent) {
+    public InjectConfigBukkit(ConfigurationSection configuration, InjectConfigBukkit parent) {
         this.configuration = configuration;
         this.file = parent.getFile();
         this.fileConfiguration = parent.getFileConfiguration();
@@ -30,8 +30,8 @@ public class ConfigSpigot implements IConfig {
     }
 
     @Override
-    public IConfig section(String section) {
-        return new ConfigSpigot(configuration.getConfigurationSection(section), this);
+    public InjectableConfig section(String section) {
+        return new InjectConfigBukkit(configuration.getConfigurationSection(section), this);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ConfigSpigot implements IConfig {
     }
 
     @Override
-    public void save() throws IOException {
+    public void readObject() throws IOException {
         fileConfiguration.save(file);
     }
 }

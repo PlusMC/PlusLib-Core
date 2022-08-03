@@ -7,9 +7,10 @@ import com.mongodb.ServerAddress;
 import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
-import org.plusmc.pluslibcore.reflect.bungeespigot.BungeeSpigotReflection;
-import org.plusmc.pluslibcore.reflect.bungeespigot.config.ConfigEntry;
-import org.plusmc.pluslibcore.reflect.bungeespigot.config.IConfig;
+import org.mongodb.morphia.dao.BasicDAO;
+import org.plusmc.pluslibcore.reflection.bungeebukkit.BungeeBukkitReflection;
+import org.plusmc.pluslibcore.reflection.bungeebukkit.config.ConfigEntry;
+import org.plusmc.pluslibcore.reflection.bungeebukkit.config.InjectableConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +22,7 @@ public class DatabaseHandler {
     private static DatabaseHandler instance;
     private MongoClient client;
     private Morphia morphia;
+    private Datastore datastore;
     private List<User> cachedUsers;
     private UserDAO userDAO;
 
@@ -38,25 +40,25 @@ public class DatabaseHandler {
     @ConfigEntry
     private String password;
 
-    private DatabaseHandler(IConfig config) {
-        config.writeIntoObject(this);
+    private DatabaseHandler(InjectableConfig config) {
+        config.inject(this);
         if (!useMongodb) {
-            if (BungeeSpigotReflection.getLogger() != null)
-                BungeeSpigotReflection.getLogger().info("Mongodb is disabled, skipping database setup");
+            if (BungeeBukkitReflection.getLogger() != null)
+                BungeeBukkitReflection.getLogger().info("Mongodb is disabled, skipping database setup");
             return;
         }
 
-        BungeeSpigotReflection.runAsync(() -> {
+        BungeeBukkitReflection.runAsync(() -> {
             try {
                 if (collection.isBlank() || host.isBlank() || port == 0)
                     throw new IllegalArgumentException("Invalid Mongodb Configuration");
                 loadMongodb();
-                loadDataStore();
-                if (BungeeSpigotReflection.getLogger() != null)
-                    BungeeSpigotReflection.getLogger().info("Connected to MongoDB");
+                userDAO = createDAO(User.class, UserDAO.class);
+                if (BungeeBukkitReflection.getLogger() != null)
+                    BungeeBukkitReflection.getLogger().info("Connected to MongoDB");
             } catch (Exception e) {
-                if (BungeeSpigotReflection.getLogger() != null)
-                    BungeeSpigotReflection.getLogger().warning("Failed to connect to database!");
+                if (BungeeBukkitReflection.getLogger() != null)
+                    BungeeBukkitReflection.getLogger().warning("Failed to connect to database!");
                 e.printStackTrace();
                 client.close();
                 client = null;
@@ -76,19 +78,26 @@ public class DatabaseHandler {
             MongoCredential credential = MongoCredential.createCredential(username, collection, password.toCharArray());
             client = new MongoClient(address, credential, options);
         }
-    }
 
-    private void loadDataStore() {
         morphia = new Morphia();
-        morphia.map(User.class);
+        datastore = morphia.createDatastore(client, collection);
 
-        Datastore datastore = morphia.createDatastore(client, collection);
-        datastore.ensureIndexes();
-
-        userDAO = new UserDAO(User.class, datastore);
     }
 
-    public static void createInstance(IConfig config) {
+    private <T extends BasicDAO<?, ?>> T createDAO(Class<?> clazz, Class<T> clazzDAO) {
+        morphia = new Morphia();
+        morphia.map(clazz);
+        T dao = null;
+        try {
+            dao = clazzDAO.getConstructor(Class.class, Datastore.class).newInstance(clazz, morphia.createDatastore(client, collection));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dao;
+    }
+
+
+    public static void createInstance(InjectableConfig config) {
         if (instance == null)
             instance = new DatabaseHandler(config);
 
@@ -99,7 +108,7 @@ public class DatabaseHandler {
     }
 
     public void updateCache() {
-        BungeeSpigotReflection.runAsync(() ->
+        BungeeBukkitReflection.runAsync(() ->
                 cachedUsers = userDAO.find().asList()
         );
     }
@@ -114,7 +123,7 @@ public class DatabaseHandler {
     public void asyncUserAction(UUID uuid, Consumer<User> action) {
         if (!isLoaded())
             return;
-        BungeeSpigotReflection.runAsync(() -> {
+        BungeeBukkitReflection.runAsync(() -> {
             User user = getUser(uuid);
             if (user != null)
                 action.accept(user);

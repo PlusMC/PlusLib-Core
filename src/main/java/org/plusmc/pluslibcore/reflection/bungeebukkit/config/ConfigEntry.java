@@ -1,4 +1,4 @@
-package org.plusmc.pluslibcore.reflect.bungeespigot.config;
+package org.plusmc.pluslibcore.reflection.bungeebukkit.config;
 
 
 import java.lang.annotation.ElementType;

@@ -1,15 +1,15 @@
-package org.plusmc.pluslibcore.reflect.bungeespigot;
+package org.plusmc.pluslibcore.reflection.bungeebukkit;
 
 
 
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public abstract class BungeeSpigotReflection {
+public abstract class BungeeBukkitReflection {
     public static final String BUKKIT = "org.bukkit.Bukkit";
     public static final String PROXY_SERVER = "net.md_5.bungee.api.ProxyServer";
 
-    private BungeeSpigotReflection() {
+    private BungeeBukkitReflection() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -26,7 +26,6 @@ public abstract class BungeeSpigotReflection {
                 return (Logger) logger;
             } else if (isBungee()) {
                 Class<?> bungee = Class.forName(PROXY_SERVER);
-                Class<?> pluginClass = Class.forName("net.md_5.bungee.api.plugin.Plugin");
                 Object proxy = bungee.getDeclaredMethod("getInstance").invoke(null);
                 Object pluginManager = bungee.getDeclaredMethod("getPluginManager").invoke(proxy);
 

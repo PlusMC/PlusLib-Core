@@ -1,6 +1,6 @@
-package org.plusmc.pluslibcore.reflect.spigotpaper;
+package org.plusmc.pluslibcore.reflection.bukkitpaper;
 
-public interface PaperSpigotReflection {
+public interface BukkitPaperReflection {
 
 
     static boolean isPaper() {

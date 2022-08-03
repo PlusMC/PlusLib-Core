@@ -1,12 +1,12 @@
-package org.plusmc.pluslibcore.reflect.spigotpaper.timings;
+package org.plusmc.pluslibcore.reflection.bukkitpaper.timings;
 
 
 import org.bukkit.plugin.Plugin;
 
-public class PaperTimings implements ITimings {
+public class WrappedTimingsPaper implements WrappedTimings {
     private final co.aikar.timings.Timing timings;
 
-    public PaperTimings(Plugin plugin, String name) {
+    public WrappedTimingsPaper(Plugin plugin, String name) {
         timings = co.aikar.timings.Timings.of(plugin, name);
     }
 

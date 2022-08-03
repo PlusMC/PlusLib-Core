@@ -1,26 +1,26 @@
-package org.plusmc.pluslibcore.reflect.bungeespigot.config;
+package org.plusmc.pluslibcore.reflection.bungeebukkit.config;
 
-import org.plusmc.pluslibcore.reflect.bungeespigot.BungeeSpigotReflection;
+import org.plusmc.pluslibcore.reflection.bungeebukkit.BungeeBukkitReflection;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-public interface IConfig {
+public interface InjectableConfig {
 
-    static IConfig create(File file) throws IOException {
-        if (BungeeSpigotReflection.isBukkit()) {
-            return new ConfigSpigot(file);
-        } else if (BungeeSpigotReflection.isBungee()) {
-            return new ConfigBungee(file);
+    static InjectableConfig create(File file) throws IOException {
+        if (BungeeBukkitReflection.isBukkit()) {
+            return new InjectConfigBukkit(file);
+        } else if (BungeeBukkitReflection.isBungee()) {
+            return new InjectConfigBungee(file);
         }
         throw new IllegalStateException("Unsupported server type");
     }
 
-    IConfig section(String section);
+    InjectableConfig section(String section);
 
-    default void writeIntoConfig(Object obj) {
+    default void readObject(Object obj) {
         try {
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
@@ -34,14 +34,14 @@ public interface IConfig {
 
     void set(String key, Object value);
 
-    default void writeIntoObject(Object obj) {
+    default void inject(Object obj) {
         try {
             for (Field field : obj.getClass().getDeclaredFields()) {
                 if (!field.isAnnotationPresent(ConfigEntry.class))
                     continue;
                 if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
-                    if (BungeeSpigotReflection.getLogger() != null)
-                        BungeeSpigotReflection.getLogger().warning("Cannot read field " + field.getName() + " in " + obj.getClass().getName() + " because it is final or static");
+                    if (BungeeBukkitReflection.getLogger() != null)
+                        BungeeBukkitReflection.getLogger().warning("Cannot read field " + field.getName() + " in " + obj.getClass().getName() + " because it is final or static");
                     continue;
                 }
                 field.setAccessible(true);
@@ -59,5 +59,5 @@ public interface IConfig {
 
     File getFile();
 
-    void save() throws IOException;
+    void readObject() throws IOException;
 }

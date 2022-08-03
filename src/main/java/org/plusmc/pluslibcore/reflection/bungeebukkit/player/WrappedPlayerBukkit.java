@@ -1,15 +1,18 @@
-package org.plusmc.pluslibcore.reflect.bungeespigot.player;
+package org.plusmc.pluslibcore.reflection.bungeebukkit.player;
 
 import org.bukkit.entity.Player;
 
-public class PlayerSpigot implements IPlayer {
+public class WrappedPlayerBukkit implements WrappedPlayer {
 
     private final Player player;
 
-    protected PlayerSpigot(Object player) {
+    protected WrappedPlayerBukkit(Object player) {
         if (!(player instanceof Player p))
             throw new IllegalArgumentException("Player is not a Player");
         this.player = p;
+    }
+    public Player getPlayerBukkit() {
+        return player;
     }
 
     @Override

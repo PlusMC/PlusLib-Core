@@ -1,11 +1,11 @@
-package org.plusmc.pluslibcore.reflect.spigotpaper.timings;
+package org.plusmc.pluslibcore.reflection.bukkitpaper.timings;
 
 import org.spigotmc.CustomTimingsHandler;
 
-public class SpigotTimings implements ITimings {
+public class WrappedTimingsBukkit implements WrappedTimings {
     CustomTimingsHandler handler;
 
-    public SpigotTimings(String name) {
+    public WrappedTimingsBukkit(String name) {
         this.handler = new CustomTimingsHandler(name);
     }
 
