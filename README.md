@@ -1,2 +1,2 @@
-# PlusLib
- plus libbbb
+# PlusLib-Core
+The core of pluslib
