@@ -4,6 +4,7 @@ This contains common components of PlusLib
 
 ### Prerequisites
 - JDK 16
+- An IDE with manifold support (Optional) [Learn More About Manifold][1]
 
 ### Compile
 1. Clone this repository (`git clone https://github.com/PlusMC/PlusLib-Core.git`)
@@ -15,6 +16,7 @@ This contains common components of PlusLib
 ### Issues, Bugs?
 - Just open a new [issue][4] and I will attempt to sqwash the bug :D
 
+[1]: https://manifold.systems/
 [4]: https://github.com/PlusMC/PlusLib-Core/issues/new/choose
 
 Any other issues contact me on discord (`OakleyCord#3081`)
