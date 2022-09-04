@@ -1,5 +1,5 @@
 # PlusLib-Core
-The core of pluslib
+This contains common components of PlusLib
 ## Compiling
 
 ### Prerequisites
