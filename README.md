@@ -1,5 +1,7 @@
 # PlusLib-Core
 This contains common components of PlusLib
+
+AS OF VERSION 0.15-INDEV BUNGEE WILL NOT BE SUPPORTED
 ## Compiling
 
 ### Prerequisites
