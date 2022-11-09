@@ -7,7 +7,8 @@ public class StringFormatter {
     }
 
 
-    //thank you github copilot :praying_hands:
+    //thanks GitHub copilot :praying_hands:
+    // i just realized there is probably something in the standard library that does this
     public static String formatTime(long time) {
         String timeString;
         if (time >= 86400000) {

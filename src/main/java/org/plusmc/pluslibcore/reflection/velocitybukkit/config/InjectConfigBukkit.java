@@ -1,4 +1,4 @@
-package org.plusmc.pluslibcore.reflection.bungeebukkit.config;
+package org.plusmc.pluslibcore.reflection.velocitybukkit.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -52,7 +52,7 @@ public class InjectConfigBukkit implements InjectableConfig {
     }
 
     @Override
-    public void readObject() throws IOException {
+    public void save() throws IOException {
         fileConfiguration.save(file);
     }
 }

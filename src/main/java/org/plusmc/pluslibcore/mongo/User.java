@@ -2,7 +2,7 @@ package org.plusmc.pluslibcore.mongo;
 
 import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.annotations.*;
-import org.plusmc.pluslibcore.reflection.bungeebukkit.player.WrappedPlayer;
+import org.plusmc.pluslibcore.reflection.velocitybukkit.player.WrappedPlayer;
 import org.plusmc.pluslibcore.util.StringFormatter;
 
 import java.util.TimeZone;

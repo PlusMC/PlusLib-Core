@@ -1,6 +1,6 @@
-package org.plusmc.pluslibcore.reflection.bungeebukkit.config;
+package org.plusmc.pluslibcore.reflection.velocitybukkit.config;
 
-import org.plusmc.pluslibcore.reflection.bungeebukkit.BungeeBukkitReflection;
+import org.plusmc.pluslibcore.reflection.velocitybukkit.VelocityBukkitReflection;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,17 +10,17 @@ import java.lang.reflect.Modifier;
 public interface InjectableConfig {
 
     static InjectableConfig create(File file) throws IOException {
-        if (BungeeBukkitReflection.isBukkit()) {
+        if (VelocityBukkitReflection.isBukkit()) {
             return new InjectConfigBukkit(file);
-        } else if (BungeeBukkitReflection.isBungee()) {
-            return new InjectConfigBungee(file);
+        } else if (VelocityBukkitReflection.isVelocity()) {
+            return new InjectConfigVelocity(file);
         }
         throw new IllegalStateException("Unsupported server type");
     }
 
     InjectableConfig section(String section);
 
-    default void readObject(Object obj) {
+    default void save(Object obj) {
         try {
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
@@ -40,8 +40,8 @@ public interface InjectableConfig {
                 if (!field.isAnnotationPresent(ConfigEntry.class))
                     continue;
                 if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
-                    if (BungeeBukkitReflection.getLogger() != null)
-                        BungeeBukkitReflection.getLogger().warning("Cannot read field " + field.getName() + " in " + obj.getClass().getName() + " because it is final or static");
+                    if (VelocityBukkitReflection.getLogger() != null)
+                        VelocityBukkitReflection.getLogger().warning("Cannot read field " + field.getName() + " in " + obj.getClass().getName() + " because it is final or static");
                     continue;
                 }
                 field.setAccessible(true);
@@ -59,5 +59,5 @@ public interface InjectableConfig {
 
     File getFile();
 
-    void readObject() throws IOException;
+    void save() throws IOException;
 }

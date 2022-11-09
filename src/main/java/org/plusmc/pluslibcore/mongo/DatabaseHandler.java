@@ -8,9 +8,9 @@ import org.jetbrains.annotations.Nullable;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.dao.BasicDAO;
-import org.plusmc.pluslibcore.reflection.bungeebukkit.BungeeBukkitReflection;
-import org.plusmc.pluslibcore.reflection.bungeebukkit.config.ConfigEntry;
-import org.plusmc.pluslibcore.reflection.bungeebukkit.config.InjectableConfig;
+import org.plusmc.pluslibcore.reflection.velocitybukkit.VelocityBukkitReflection;
+import org.plusmc.pluslibcore.reflection.velocitybukkit.config.ConfigEntry;
+import org.plusmc.pluslibcore.reflection.velocitybukkit.config.InjectableConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,22 +43,22 @@ public class DatabaseHandler {
     private DatabaseHandler(InjectableConfig config) {
         config.inject(this);
         if (!useMongodb) {
-            if (BungeeBukkitReflection.getLogger() != null)
-                BungeeBukkitReflection.getLogger().info("Mongodb is disabled, skipping database setup");
+            if (VelocityBukkitReflection.getLogger() != null)
+                VelocityBukkitReflection.getLogger().info("Mongodb is disabled, skipping database setup");
             return;
         }
 
-        BungeeBukkitReflection.runAsync(() -> {
+        VelocityBukkitReflection.runAsync(() -> {
             try {
                 if (collection.isBlank() || host.isBlank() || port == 0)
                     throw new IllegalArgumentException("Invalid Mongodb Configuration");
                 loadMongodb();
                 userDAO = createDAO(User.class, UserDAO.class);
-                if (BungeeBukkitReflection.getLogger() != null)
-                    BungeeBukkitReflection.getLogger().info("Connected to MongoDB");
+                if (VelocityBukkitReflection.getLogger() != null)
+                    VelocityBukkitReflection.getLogger().info("Connected to MongoDB");
             } catch (Exception e) {
-                if (BungeeBukkitReflection.getLogger() != null)
-                    BungeeBukkitReflection.getLogger().warning("Failed to connect to database!");
+                if (VelocityBukkitReflection.getLogger() != null)
+                    VelocityBukkitReflection.getLogger().warning("Failed to connect to database!");
                 e.printStackTrace();
                 client.close();
                 client = null;
@@ -103,12 +103,20 @@ public class DatabaseHandler {
 
     }
 
+
+    public static void stopInstance() {
+        if (instance != null) {
+            instance.client.close();
+            instance = null;
+        }
+    }
+
     public static @Nullable DatabaseHandler getInstance() {
         return instance;
     }
 
     public void updateCache() {
-        BungeeBukkitReflection.runAsync(() ->
+        VelocityBukkitReflection.runAsync(() ->
                 cachedUsers = userDAO.find().asList()
         );
     }
@@ -123,7 +131,7 @@ public class DatabaseHandler {
     public void asyncUserAction(UUID uuid, Consumer<User> action) {
         if (!isLoaded())
             return;
-        BungeeBukkitReflection.runAsync(() -> {
+        VelocityBukkitReflection.runAsync(() -> {
             User user = getUser(uuid);
             if (user != null)
                 action.accept(user);

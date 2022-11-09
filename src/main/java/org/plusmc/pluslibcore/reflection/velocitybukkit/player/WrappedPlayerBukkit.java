@@ -1,4 +1,4 @@
-package org.plusmc.pluslibcore.reflection.bungeebukkit.player;
+package org.plusmc.pluslibcore.reflection.velocitybukkit.player;
 
 import org.bukkit.entity.Player;
 

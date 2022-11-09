@@ -1,4 +1,4 @@
-package org.plusmc.pluslibcore.reflection.bungeebukkit.config;
+package org.plusmc.pluslibcore.reflection.velocitybukkit.config;
 
 
 import java.lang.annotation.ElementType;
