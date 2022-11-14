@@ -1,6 +1,5 @@
 package org.plusmc.pluslibcore.util;
 
-import net.md_5.bungee.api.ChatColor;
 
 import java.util.List;
 
@@ -8,6 +7,23 @@ import java.util.List;
 //https://www.spigotmc.org/threads/free-code-sending-perfectly-centered-chat-message.95872/
 public class MessageUtil {
 
+
+    //implement chatcolor stuff from spigot because velocity doesn't have it
+    private static final String ALL_CODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx";
+    private static final char COLOR_CHAR = '\u00A7';
+
+    private static String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
+        char[] b = textToTranslate.toCharArray();
+        for ( int i = 0; i < b.length - 1; i++ )
+        {
+            if ( b[i] == altColorChar && ALL_CODES.indexOf( b[i + 1] ) > -1 )
+            {
+                b[i] = COLOR_CHAR;
+                b[i + 1] = Character.toLowerCase( b[i + 1] );
+            }
+        }
+        return new String( b );
+    }
     private MessageUtil() {
         //not called
     }
@@ -21,7 +37,7 @@ public class MessageUtil {
         if (message == null || message.equals("")) {
             return "";
         }
-        message = ChatColor.translateAlternateColorCodes('&', message);
+        message = translateAlternateColorCodes('&', message);
 
         int messagePxSize = getPixelSize(message);
 
@@ -34,7 +50,7 @@ public class MessageUtil {
             sb.append(" ");
             compensated += spaceLength;
         }
-        return sb.toString() + message;
+        return sb + message;
     }
 
     public static String border(List<String> lines) {
@@ -57,9 +73,7 @@ public class MessageUtil {
         int middleRepeat = ((maxPxSize - innerSize - outerSize) / 2) / middleSize;
 
         border.append(inner);
-        for (int i = 0; i < middleRepeat; i++) {
-            border.append(middle);
-        }
+        border.append(String.valueOf(middle).repeat(Math.max(0, middleRepeat)));
         border.append(outer);
         return border.toString();
     }
