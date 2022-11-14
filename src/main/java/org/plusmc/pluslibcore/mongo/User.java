@@ -95,6 +95,8 @@ public class User {
     }
 
     public void setTimeZone(TimeZone timeZone) {
+        if(timeZone == null)
+            return;
         this.timeZone = timeZone.getID();
     }
 
