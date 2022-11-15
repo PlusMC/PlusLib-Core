@@ -6,7 +6,8 @@
 
     <groupId>org.plusmc</groupId>
     <artifactId>PlusLib-Core</artifactId>
-    <version>0.15.2-INDEV</version>
+
+    <version>1.0.0-INDEV</version>
     <packaging>jar</packaging>
 
     <name>PlusLib</name>

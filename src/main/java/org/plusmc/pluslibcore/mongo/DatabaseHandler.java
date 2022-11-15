@@ -107,6 +107,7 @@ public class DatabaseHandler {
     public static void stopInstance() {
         if (instance != null) {
             instance.client.close();
+            VelocityBukkitReflection.getLogger().info("Disconnected from MongoDB");
             instance = null;
         }
     }
