@@ -36,7 +36,7 @@ public class InjectConfigBukkit implements InjectableConfig {
 
     @Override
     public void set(String key, Object value) {
-        if (configuration.getCurrentPath() != null || !configuration.getCurrentPath().isEmpty())
+        if (configuration.getCurrentPath() != null && !configuration.getCurrentPath().isBlank())
             fileConfiguration.set(configuration.getCurrentPath(), value);
         else configuration.set(key, value);
     }
