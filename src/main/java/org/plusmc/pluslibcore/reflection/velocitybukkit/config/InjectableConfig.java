@@ -24,6 +24,8 @@ public interface InjectableConfig {
         try {
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
+                if (!field.isAnnotationPresent(ConfigEntry.class))
+                    continue;
                 field.setAccessible(true);
                 this.set(field.getName(), field.get(obj));
             }
@@ -41,7 +43,7 @@ public interface InjectableConfig {
                     continue;
                 if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
                     if (VelocityBukkitReflection.getLogger() != null)
-                        VelocityBukkitReflection.getLogger().warning("Cannot read field " + field.getName() + " in " + obj.getClass().getName() + " because it is final or static");
+                        VelocityBukkitReflection.getLogger().warning("Cannot write field " + field.getName() + " in " + obj.getClass().getName() + " because it is final or static");
                     continue;
                 }
                 field.setAccessible(true);
