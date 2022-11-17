@@ -2,6 +2,7 @@ package org.plusmc.pluslibcore.reflection.velocitybukkit.config;
 
 
 
+import org.plusmc.pluslibcore.reflection.velocitybukkit.VelocityBukkitReflection;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -51,7 +52,24 @@ public class InjectConfigVelocity implements InjectableConfig {
     }
 
     @Override
-    public void save() throws IOException {
+    public void save() {
+        VelocityBukkitReflection.runAsync(() -> {
+            try {
+                if (parent == null)
+                    configuration.save(file);
+                else parent.save();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+    @Override
+    public void save(boolean async) throws IOException {
+        if(async) {
+            save();
+            return;
+        }
+
         if (parent == null)
             configuration.save(file);
         else parent.save();

@@ -20,7 +20,11 @@ public interface InjectableConfig {
 
     InjectableConfig section(String section);
 
-    default void save(Object obj) {
+    /**
+     * Reads an object and injects it into the config
+     * @param obj The object to inject
+     */
+    default void fromObject(Object obj) {
         try {
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
@@ -61,5 +65,15 @@ public interface InjectableConfig {
 
     File getFile();
 
-    void save() throws IOException;
+    /**
+     * Saves the config to the file asynchronously
+     */
+    void save();
+
+    /**
+     * Saves the config to the file
+     * @param async Whether to save the config asynchronously
+     * @throws IOException If an error occurs while saving the config
+     */
+    void save(boolean async) throws IOException;
 }
