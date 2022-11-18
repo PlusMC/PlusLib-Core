@@ -26,6 +26,8 @@ public abstract class VelocityBukkitReflection {
 
                 Object pluginManager = bukkitClass.getMethod("getPluginManager").invoke(null);
                 Object pluginInstance = pluginManager.getClass().getMethod("getPlugin", String.class).invoke(pluginManager, "PlusLib");
+                if (pluginInstance == null)
+                    return null;
                 Object logger = pluginInstance.getClass().getMethod("getLogger").invoke(pluginInstance);
                 return (Logger) logger;
             } else if (isVelocity()) {
