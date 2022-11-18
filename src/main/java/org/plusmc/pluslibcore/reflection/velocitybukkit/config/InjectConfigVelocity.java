@@ -7,6 +7,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class InjectConfigVelocity implements InjectableConfig {
@@ -52,8 +53,17 @@ public class InjectConfigVelocity implements InjectableConfig {
     }
 
     @Override
-    public void save() {
-        VelocityBukkitReflection.runAsync(() -> {
+    public void save() throws IOException {
+        if (parent == null)
+            configuration.save(file);
+        else parent.save();
+    }
+    @Override
+    public void save(boolean async) throws IOException {
+        if(async) {
+            save();
+            return;
+        } else VelocityBukkitReflection.runAsync(() -> {
             try {
                 if (parent == null)
                     configuration.save(file);
@@ -62,17 +72,6 @@ public class InjectConfigVelocity implements InjectableConfig {
                 e.printStackTrace();
             }
         });
-    }
-    @Override
-    public void save(boolean async) throws IOException {
-        if(async) {
-            save();
-            return;
-        }
-
-        if (parent == null)
-            configuration.save(file);
-        else parent.save();
     }
 
 }

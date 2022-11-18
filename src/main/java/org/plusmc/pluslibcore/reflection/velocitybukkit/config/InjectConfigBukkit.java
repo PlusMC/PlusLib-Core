@@ -53,21 +53,21 @@ public class InjectConfigBukkit implements InjectableConfig {
     }
 
     @Override
-    public void save() {
-        VelocityBukkitReflection.runAsync(() -> {
+    public void save() throws IOException {
+        fileConfiguration.save(file);
+    }
+
+    @Override
+    public void save(boolean async) throws IOException {
+        if (!async)
+            save();
+        else VelocityBukkitReflection.runAsync(() -> {
             try {
                 fileConfiguration.save(file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-    }
-
-    @Override
-    public void save(boolean async) throws IOException {
-        if(async)
-            save();
-        else fileConfiguration.save(file);
     }
 }
 

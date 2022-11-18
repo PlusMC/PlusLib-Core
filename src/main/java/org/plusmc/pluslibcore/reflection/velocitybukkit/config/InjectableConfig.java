@@ -3,6 +3,7 @@ package org.plusmc.pluslibcore.reflection.velocitybukkit.config;
 import org.plusmc.pluslibcore.reflection.velocitybukkit.VelocityBukkitReflection;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -50,8 +51,13 @@ public interface InjectableConfig {
                         VelocityBukkitReflection.getLogger().warning("Cannot write field " + field.getName() + " in " + obj.getClass().getName() + " because it is final or static");
                     continue;
                 }
+
                 field.setAccessible(true);
-                field.set(obj, this.get(field.getName()));
+                Object value = this.get(field.getName());
+                if (value == null)
+                    continue;
+
+                field.set(obj, value);
             }
 
 
@@ -68,7 +74,7 @@ public interface InjectableConfig {
     /**
      * Saves the config to the file asynchronously
      */
-    void save();
+    void save() throws IOException;
 
     /**
      * Saves the config to the file
